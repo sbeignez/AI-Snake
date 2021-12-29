@@ -30,6 +30,7 @@ Nokia original game:
     * [Hamiltonian-Cylce-Snake](https://github.com/UweR70/Hamiltonian-Cylce-Snake) - GitHub
 * Pyhton Engineer
     * [Teach AI To Play Snake - Reinforcement Learning Tutorial With PyTorch And Pygame (Part 1)](https://www.youtube.com/watch?v=PJl4iabBEz0&ab_channel=PythonEngineer) - Dec 2020
+    * GitHub [snake-ai-pytorch](https://github.com/python-engineer/snake-ai-pytorch)
 * Alex Patrenko
     * [Advantage Actor-Critic solves 6x6 Snake (Reinforcement Learning)](https://www.youtube.com/watch?v=bh_5aIqVTUY) - Apr 2018
     * [snake-rl](https://github.com/alex-petrenko/snake-rl) - GitHub
@@ -46,6 +47,14 @@ Nokia original game:
 * To watch:
     * Square Robot [Square Robot](https://www.youtube.com/watch?v=8cdUree20j4&ab_channel=SquareRobots)
     * Ludius0 [..](https://www.youtube.com/watch?v=7Vh77YytDgg&ab_channel=ludius0)
+
+
+* Dijkstras Algorithm, A*
+  * https://www.youtube.com/watch?v=-L-WgKMFuhE&ab_channel=SebastianLague
+  * https://www.gamedeveloper.com/programming/toward-more-realistic-pathfinding
+  * https://www.researchgate.net/publication/237197542_Shortest_Path_Finding_Problem_in_Stochastic_Time-Dependent_Road_Networks_With_Stochastic_First-In-First-Out_Property
+  * https://neo4j.com/developer/graph-data-science/path-finding-graph-algorithms/
+
 
 
 ### 2.b Technics
