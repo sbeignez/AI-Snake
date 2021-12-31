@@ -18,27 +18,47 @@ Nokia original game:
 
 ## 2. References
 
-### 2.a Projects
+#### Algorithmic methods
+  1. Pathfinding
+      1. Shortest path problems
+          - https://en.wikipedia.org/wiki/Shortest_path_problem
+      1. A* Pathfinding Algorithm
+         http://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html
+  1. Hamiltonian loop
+#### Machine Learning
+  1. Supervised Learning
+  1. Neurale Network, trained by Gradient Descent  
+  1. Neural Networks, selected by Genetic algorithm
+  - Re-inforcement Learning
+    - Q Learning
+    - Deep Q Learning
 
-* Code Bullet
-    * [Video](https://www.youtube.com/watch?v=3bhP7zulFfY&ab_channel=CodeBullet)
-    * ..
-* AlphaPhoenix: [Video](https://www.youtube.com/watch?v=TOpBcfbAgPg&ab_channel=AlphaPhoenix)
-* Jack of Some: [Neural Network Learns to Play Snake using Deep Reinforcement Learning](https://www.youtube.com/watch?v=i0Pkgtbh1xw) - March 2020
+
+## 3. Public Projects
+
+* Code Bullet  
+    * Video 1: [A.I. Learns to play Snake using Deep Q Learning](https://www.youtube.com/watch?v=3bhP7zulFfY&ab_channel=CodeBullet)
+    * Video 2: [I Created a PERFECT SNAKE A.I.](https://www.youtube.com/watch?v=tjQIO1rqTBE)
+    * GitHub: [Code-Bullet/SnakeFusion](https://github.com/Code-Bullet/SnakeFusion) - 
+* AlphaPhoenix
+    * [Video](https://www.youtube.com/watch?v=TOpBcfbAgPg&ab_channel=AlphaPhoenix)
+* Jack of Some
+    * Video: [Neural Network Learns to Play Snake using Deep Reinforcement Learning](https://www.youtube.com/watch?v=i0Pkgtbh1xw) - March 2020
+    * GitHub: ??
 * V.Gedace  
     * [Generic solution for the Snake game via Hamiltonian Cycle and additional abbreviation logic.](https://www.youtube.com/watch?v=UI_I6sJXaJw&t=45s&ab_channel=V.Gedace) - Video - Oct 2020  
-    * [Hamiltonian-Cylce-Snake](https://github.com/UweR70/Hamiltonian-Cylce-Snake) - GitHub
+    * GitHub: [Hamiltonian-Cylce-Snake](https://github.com/UweR70/Hamiltonian-Cylce-Snake) - C# - Algo / Hamiltonian-Cycle
 * Pyhton Engineer
     * [Teach AI To Play Snake - Reinforcement Learning Tutorial With PyTorch And Pygame (Part 1)](https://www.youtube.com/watch?v=PJl4iabBEz0&ab_channel=PythonEngineer) - Dec 2020
     * GitHub [snake-ai-pytorch](https://github.com/python-engineer/snake-ai-pytorch)
 * Alex Patrenko
     * [Advantage Actor-Critic solves 6x6 Snake (Reinforcement Learning)](https://www.youtube.com/watch?v=bh_5aIqVTUY) - Apr 2018
-    * [snake-rl](https://github.com/alex-petrenko/snake-rl) - GitHub
-    * [sample-factory](https://github.com/alex-petrenko/sample-factory) - GitHub
+    * GitHub: [snake-rl](https://github.com/alex-petrenko/snake-rl) - Python - RL Reinforcement Learning, "Monte-Carlo rollout into the future predicted by DNN"
+    * GitHub: [sample-factory](https://github.com/alex-petrenko/sample-factory) - Python - Asynchronous reinforcement learning, samples
 * Paweł Kamiński
     * Blog: [Training an AI bot to play Snake](https://www.codeer.dev/blog/2020/05/03/ai-snake.html)
     * Video: [AI learns to play Snake - Deep Q Learning - Neural Network](https://www.youtube.com/watch?v=ozFDavKIvpk&ab_channel=Pawe%C5%82Kami%C5%84ski)
-    * GitHub: [AI-Snake](https://github.com/pawelkami/AI-Snake)
+    * GitHub: [AI-Snake](https://github.com/pawelkami/AI-Snake) - Python - Deep Reinforcement Learning algorithm, Deep Q Neural Network
 
 
 * Others:
@@ -58,24 +78,13 @@ Nokia original game:
 
 
 ### 2.b Technics
-* Algorithm
-  - Hamilton paths
-  - Shortest path problems
-    https://en.wikipedia.org/wiki/Shortest_path_problem
-  - A* Pathfinding Algorithm
-    - http://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html
-* Machine Learning
-  - Supervised Learning  
-    - k
-  - Re-inforcement Learning
-    - Q Learning
-    - Deep Q Learning
 
 
 
+## 2. link
 
-Ideas:  
-* A* with temporal dependant obstacles
+[Link to reference](#2-link)
+
 
 ---
 Video: Jack   
