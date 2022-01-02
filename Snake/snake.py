@@ -1,19 +1,20 @@
-# from snake_agent_human import *
-# from snake_agent_ai import *
-# from snake_utils import *
 from snake_game import *
-# from snake_ui import *
-# from snake_engine import *
+from snake_agent_ai import Agents
+# import argparse
+import enum
 
-# GAME DEFAULTS
-BOARD_ROWS = 10
-BOARD_COLS = 10
-MODE_AUTO = False
 
 
 
 if __name__ == '__main__':
 
-    game = Game(Agents.AGENT_SHORTEST_DISTANCE, BOARD_COLS, BOARD_ROWS)
+    # Parameters
+    params = GameParams()
+    params.BOARD_ROWS = 3
+    params.BOARD_COLS = 3
+    params.SCALE = 50
+    params.agent = Agents.AGENT_SHORTEST_DISTANCE
+    params.mode = Mode.MODE_PLAY
 
-    game.run()
+    # Game run!
+    Game(params).run()

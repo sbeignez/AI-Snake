@@ -26,9 +26,6 @@ class AgentAI():
             return self.next_move_AS()
             
     def next_move_SD(self):
-        # apple = self.session.apple
-        # snake = self.session.snake
-        body = self.session.snake.body
         head = self.session.snake.head()
         moves = []
         # DOWN
@@ -44,9 +41,9 @@ class AgentAI():
         if head[0] > 1 and (head[0]-1, head[1]) not in self.session.snake.body:
             moves.append((head[0]-1, head[1]))
 
-        print("BODY:", self.session.snake.body, "APPLE:", self.session.apple)
+        # print("BODY:", self.session.snake.body, self.session.apple)
         moves.sort( key = lambda x : abs(x[0] - self.session.apple.x) + abs(x[1] - self.session.apple.y), reverse = False)
-        print("MOVES:", moves)
+        # print("MOVES:", moves)
 
         # move = min(moves, key = lambda x : abs(x[0] - apple[0]) + abs(x[1] - apple[1]))
 
@@ -101,7 +98,7 @@ class AgentAI():
                 if len(path) >= 2:
                     direction = Direction.dir(path[0], path[1])
 
-                print("AGENT (AI) action:", direction)
+                # print("AGENT (AI) action:", direction)
                 self.paths = [path]
                 return direction
 

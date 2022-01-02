@@ -23,3 +23,9 @@ class Direction(enum.Enum):
 
     def all_dirs():
         return [Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT]
+
+
+
+
+# import matplotlib.pyplot as plt
+# plt.

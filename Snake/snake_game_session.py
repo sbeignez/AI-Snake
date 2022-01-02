@@ -1,6 +1,7 @@
 
 from snake_agent_ai import *
 from snake_utils import *
+from collections import deque
 
 class GameSession():
 
@@ -17,39 +18,41 @@ class GameSession():
         self.score = 0
         self.steps = 0
 
-        # self.board = {
-        #     "apple" : None,
-        #     "snake" : [],
-        #     # "pause" : False,
-        #     # "score" : 0,
-        #     # "steps" : 0,
-        #     "paths" : None,
-        #     "move"  : None,
-        #     "board" : self.board_,
-        #     "mode"  : "",
-        #     # "game-over": False,
-        # }
-
     def create_session(self, agent):
         self.game.engine.init_snake(self)
         self.game.engine.create_apple(self)
         self.agent = AgentAI(self, agent)
+        # print("INIT:", self.snake, self.apple)
 
 
 class Board():
 
     def __init__(self, cols, rows) -> None:
-
-        if cols <3 or cols >100:
-            raise ValueError("Boards' number of columns must be between 3 and 100") 
-        if rows <3 or rows >100:
-            raise ValueError("Boards' number of rows must be between 3 and 100")
-
         self.cols = cols
         self.rows = rows
 
+    @property
+    def cols(self):
+        return self._cols
+
+    @cols.setter
+    def cols(self, cols):
+        if cols <3 or cols >100:
+            raise ValueError("Boards' number of columns must be between 3 and 100") 
+        self._cols = cols
+
+    @property
+    def rows(self):
+        return self._rows
+
+    @rows.setter
+    def rows(self, rows):    
+        if rows <3 or rows >100:
+            raise ValueError("Boards' number of rows must be between 3 and 100")
+        self._rows = rows
+
     def size(self):
-        return self.cols * self.rows
+        return self._cols * self._rows
 
 
 class Apple():
@@ -61,25 +64,43 @@ class Apple():
     def cell(self):
         return (self.x, self.y)
 
+    def __str__(self):
+        return f"Apple({self.x}, {self.y})"
+    __repr__ = __str__
+
+
 
 class Snake():
 
     def __init__(self, snake_body = []):
-        # TODO change to deque
-        self.body = snake_body
+        self._body = deque(snake_body)
 
+    @property
     def body(self):
-        return self.body
+        return self._body
 
     def head(self):
-        return self.body[-1]
+        if not self._body:
+            return None
+        return self._body[-1]
+
+    def tail(self):
+        if not self._body:
+            return None
+        return self._body[0]
 
     def move_to(self, cell: Cell):
-        self.body.append(cell)
-        self.body.pop(0)
+        self._body.append(cell)
+        self._body.popleft()
     
     def grow(self):
-        self.body.insert(0, self.body[0])
+        # snake grows 1 step after eating the apple
+        # tail is duplicated
+        self._body.appendleft(self._body[0])
 
+    def len(self):
+        return len(self._body)
 
-
+    def __str__(self):
+        return f"Snake({list(self.body)})"
+    __repr__ = __str__

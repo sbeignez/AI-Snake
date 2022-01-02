@@ -33,7 +33,7 @@ class GameEngine():
         """
 
         snake_body = [ ((session.board.cols+1)//2, (session.board.rows+1)//2 + 2 - i) for i in range(3) ]
-        print("Engine.init_snake()", snake_body)
+        # print("Engine.init_snake()", snake_body)
         session.snake = Snake(snake_body)
 
 
@@ -43,40 +43,46 @@ class GameEngine():
         Exclude cells with snake body
         """
 
-        if len(session.snake.body) == session.board.rows * session.board.cols:
+        if session.snake.len() == session.board.rows * session.board.cols:
             return None
         cells = { (c,r) for r in range(1, session.board.rows) for c in range(1, session.board.cols + 1) } - set(session.snake.body) 
-        apple = random.choice(tuple(cells))
-        print("Engine.create_apple()", apple)
-        session.apple = Apple(*apple)
+        
+        if len(cells) != 0:
+            apple = Apple(* random.choice(tuple(cells)))
+            session.apple = apple
+        else:
+            print("Engine.create_apple(): error")
+
+        # print("Engine.create_apple()", apple)
+        
 
 
     def next_state(self, session, action):
 
         direction = action
 
-        print("action", direction)
-
         new_head = Direction.add(session.snake.head(), direction)
-
-        # engine.next_state(state, action) -> state
-        # state = [ board, snake, apple ] & status in {game_on, game_over} & reward (eat apple = 1)
         
-        if self.is_valid_move(session, new_head): # No COLLISION BOARD BODERS and BODY 
-            # MOVE
-            session.snake.move_to(new_head)
+        if self.is_valid_move(session, new_head): # No COLLISION BOARD BODERS and BODY
 
+            # MOVE
+            is_apple = new_head == session.apple.cell()
+
+            session.snake.move_to(new_head, is_apple)
             session.steps += 1
 
-            # EAT APPLE
-            print("EAT ? ", new_head, session.apple.cell())
-            if new_head == session.apple.cell():
-                if len(session.snake.body) == session.board.rows * session.board.cols:
-                    print("WIN")
-                    return 3 # game_won
-                session.snake.grow() # board["snake"]["lenght"] += 1
+            if is_apple:
                 self.game.engine.create_apple(session)
                 session.score += 1
+            
+
+            # EAT APPLE
+            if :
+                if session.snake.len() == session.board.rows * session.board.cols:
+                    print("WIN")
+                    return 3 # game_won
+                session.snake.grow()
+                
 
             return "game_on"
 

@@ -26,14 +26,15 @@ class UI():
     COLOR_MOVE_BEST = (30, 30, 200)
     COLOR_MOVES = (30, 30, 100)
 
-    def __init__(self, game, cols, rows):
+    def __init__(self, game):
 
         self.game = game
-        self.rows = rows
-        self.cols = cols
+        self.rows = game.session.board.rows
+        self.cols = game.session.board.cols
+        self.scale = self.SCALE
 
-        self.window_x_px = cols * self.SCALE + self.WINDOW_SCORE
-        self.window_y_px = rows * self.SCALE
+        self.window_x_px = self.cols * self.scale + self.WINDOW_SCORE
+        self.window_y_px = self.rows * self.scale
 
         pygame.init()
         pygame.display.set_caption('Snake Challenge 2022')
@@ -51,9 +52,13 @@ class UI():
             self.draw_paths(self.game.session.agent.paths)
         self.draw_snake(self.game.session.snake)
         self.draw_apple(self.game.session.apple)
-        self.draw_score()
-        if self.game.is_paused():
+
+        if self.game.is_game_over():
+            self.draw_game_over()
+        elif self.game.is_paused():
             self.draw_pause()
+
+        self.draw_score()
 
         # Update Diplay
         pygame.display.update()
@@ -118,6 +123,7 @@ class UI():
             "SCORE: " + ("        " + str(self.game.session.score))[-8:],
             "",
             "MODE: " + self.game.MODE_AUTO,
+            "AGENT" + self.game.session.agent.agent_type.value,
             "PAUSED" if self.game.is_paused() else "",
             "GAME-OVER" if self.game.is_game_over() else "",
         ]
