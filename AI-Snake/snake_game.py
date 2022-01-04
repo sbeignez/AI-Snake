@@ -21,7 +21,7 @@ class GameParams():
         self.BOARD_COLS = 3
         self.SCALE = 40
 
-        self.SPEED = 30
+        self.SPEED = 20
 
         self.agent = Agents.AGENT_A_STAR
         self.mode = Mode.MODE_PLAY
@@ -30,12 +30,16 @@ class GameParams():
 
 class Game():
 
-    GAME_RUN = 2
-    GAME_PAUSED = 1
-    GAME_WON = 3
+    GAME_RUN = 0
+    GAME_RUN_EAT = 1
+    GAME_PAUSED = 2
+    GAME_WIN = 3
     GAME_OVER = 4
 
     MODE_AUTO = "Auto"
+
+    clock = pygame.time.Clock()
+    
 
     def __init__(self, params):
 
@@ -43,11 +47,20 @@ class Game():
         self.engine = GameEngine(self)
         self.session = GameSession(self, params.agent, params.BOARD_COLS, params.BOARD_ROWS)
         self.ui = UI(self)
+
+        self.status = self.GAME_RUN
+        self.running = "pause"
+        self.quit = False
         
     best_score = 0
     game_played = 0
 
-    status = GAME_RUN
+    def restart(self):
+        self.session = GameSession(self, self.params.agent, self.session.board.cols, self.session.board.rows)
+        self.session.create_session(self.params.agent)
+        self.status = self.GAME_RUN
+
+    
 
     def is_auto(self):
         return self.MODE_AUTO == "Auto"
@@ -58,16 +71,25 @@ class Game():
         else:
             self.MODE_AUTO = "Auto"
 
-    run = "pause" # or "run"
+
+
+
+
+    def set_status(self, status):
+        self.status = status
 
     def is_game_over(self):
         return self.status == self.GAME_OVER
 
+    def is_game_end(self):
+        return self.is_game_over() or self.status == self.GAME_WIN
+
+
     def pause(self):
-        self.run = "pause"
+        self.running = "pause"
 
     def unpause(self):
-        self.run = "run"
+        self.running = "run"
 
     def rotate_pause(self):
         if self.is_paused():
@@ -77,10 +99,6 @@ class Game():
 
     def is_paused(self):
         return self.run == "pause"
-
-    def restart(self):
-        # self.session = GameSession(self, None, self.session.board.cols, self.session.board.rows)
-        self.session.create_session(self.params.agent)
     
     def end(self):
         pygame.quit()
@@ -93,6 +111,8 @@ class Game():
             self._run_play()
         elif self.params.mode == Mode.MODE_BENCHMARK:
             self._run_benchmark()
+        elif self.params.mode == Mode.TRAIN:
+            self._run_train()
         else:
             print("run: unvalid mode")
 
@@ -103,82 +123,44 @@ class Game():
         # init game session
         direction = Direction.STOP
 
-        # wait until user quits
+        # Run loop until user quits
+        while not self.quit:
 
-        while not self.run == "quit":
+            self.ui.get_keyboard_events()
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.run = "quit"
-                if event.type == pygame.KEYDOWN:
-                    # TAB: Restart game
-                    if event.key == pygame.K_TAB:
-                        print("Restart()")
-                        self.restart()
-                    # SPACE: Pause game
-                    if event.key == pygame.K_SPACE:
-                        print("Rotate_pause()")
-                        self.rotate_pause()
-                    # DELETE: Rewind 1 step
-                    if event.key == pygame.K_DELETE:
-                        pass
-                        #rewind()
-                    # SHIFT: Manual/Auto mode
-                    if event.key == pygame.K_LSHIFT:
-                        self.rotate_mode()
-
-                    if event.key == pygame.K_LEFT:
-                        direction = Direction.LEFT
-                        self.unpause()
-                    if event.key == pygame.K_RIGHT:
-                        direction = Direction.RIGHT
-                        self.unpause()
-                    if event.key == pygame.K_UP:
-                        direction = Direction.UP
-                        self.unpause()
-                    if event.key == pygame.K_DOWN:
-                        direction = Direction.DOWN
-                        self.unpause()
-                    print("INPUT KEY: ", direction)
-
-
-            if not self.is_game_over():
+            if not self.is_game_end():
 
                 # MOVE
-                if not self.is_paused() and not self.is_game_over():
+                if not self.is_paused():
 
-                    # Agent turn
-                    if self.is_auto():
+                    # 1. AGENT TURN
+                    # 1.a AI Agent
+                    if self.is_auto(): 
                         action = self.session.agent.next_move()
                         
-                        if action == Direction.STOP:
-                            if self.engine.is_game_over(self.session):
-                                self.status = self.GAME_OVER
-                            else:
-                                self.rotate_mode()
-                                self.pause()
-                    else:
-                        if self.engine.is_valid_action(self.session, direction):
-                            action = direction
-                            print("Manual action:", action)
-                        else:
+                        
+                    # 1.b Human Agent
+                    else: 
+                        action = self.ui.action_key
+
+                        if not action or not self.engine.is_valid_action(self.session, action):
                             action = Direction.STOP
-                            self.pause()
+                        else:
+                            print("Manual action:", action)
 
 
-                    # Game Engine turn: Update Model
-                    if not action == Direction.STOP:
-                        status = self.engine.next_state(self.session, action)
-                        # print("snake_game.run :status", status)
-                
-                elif not self.is_game_over():
-                    if self.engine.is_game_over(self.session):
-                        self.status = self.GAME_OVER
-                        print("GAME OVER")
+                    # 2. ENGINE turn: Update Model
+                    # if action != Direction.STOP:
+                    new_status = self.engine.next_state(self.session, action)
+                    self.set_status(new_status)
 
-                # DISPLAY
-                self.ui.draw_ui()
-                time.sleep( 1/ self.params.SPEED )
+                    if self.status in [self.GAME_PAUSED, self.GAME_OVER, self.GAME_WIN]:
+                        self.pause()
+
+            # DISPLAY
+            self.ui.draw_ui()
+            self.clock.tick(self.params.SPEED)
+            # time.sleep( 1/ self.params.SPEED )
 
 
         self.end()
@@ -214,4 +196,26 @@ class Game():
         print("Avg Lenght:", sum([ e["length"] for e in epics ]) / n_epics )
         print("Avg Steps:", sum([ e["steps"] for e in epics ]) / n_epics)
 
+    def _run_train(self):
+        print("_run_train")
+
+        n_epics = 100
+        epics = []
+            # snake_length
+            # steps
+            # 
+
+        for e in range(n_epics):
+            if e % 100 == 0: print(f"Epic #{e}")
+
+            self.session.create_session(self.params.agent)
+
+            while True:
+                action = self.session.agent.next_move()
+                if action == Direction.STOP:
+                    break
+                status = self.engine.next_state(self.session, action)
+                self.ui.draw_ui()
+
+            epics.append({"length" : self.session.snake.len(), "steps" : self.session.steps})
 

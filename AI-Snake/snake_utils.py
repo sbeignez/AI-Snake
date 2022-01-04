@@ -1,6 +1,11 @@
 import enum
 from collections import namedtuple
 
+# Agents Enum
+class Agents(enum.Enum):
+    AGENT_GREEDY = "Shortest Distance"
+    AGENT_A_STAR = "A*"
+
 # Cell
 Cell = namedtuple('Cell', 'x, y')
 

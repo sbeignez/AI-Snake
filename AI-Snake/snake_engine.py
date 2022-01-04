@@ -1,16 +1,27 @@
 import random
 from snake_utils import *
-from snake_game_session import Snake, Apple
+from snake_game_session import Snake, Apple, GameSession
 
 class GameEngine():
+
+    GAME_RUN = 0
+    GAME_RUN_EAT = 1
+    GAME_PAUSED = 2
+    GAME_WIN = 3
+    GAME_OVER = 4
 
     def __init__(self, game):
         self.game = game
 
     def is_game_over(self, session):
+        if self.is_game_win(session):
+            return False
         moves_possible = [ Direction.add(session.snake.head(), d) for d in Direction.all_dirs()]
         game_over = not any([ self.is_valid_move(session, move) for move in moves_possible])
         return game_over
+
+    def is_game_win(self, session: GameSession):
+        return session.snake.len == session.board.size
 
     def is_valid_action(self, session, action):
         return self.is_valid_move(session, Direction.add(session.snake.head(), action))
@@ -43,53 +54,51 @@ class GameEngine():
         Exclude cells with snake body
         """
 
-        if session.snake.len() == session.board.rows * session.board.cols:
+        if session.snake.len == session.board.size:
             return None
-        cells = { (c,r) for r in range(1, session.board.rows) for c in range(1, session.board.cols + 1) } - set(session.snake.body) 
+        cells = { (c,r) for r in range(1, session.board.rows+1) for c in range(1, session.board.cols + 1) } - set(session.snake.body) 
         
         if len(cells) != 0:
             apple = Apple(* random.choice(tuple(cells)))
             session.apple = apple
         else:
             print("Engine.create_apple(): error")
+            print("cells", cells, session.snake.len(), session.board.size, session.snake, session.apple)
 
         # print("Engine.create_apple()", apple)
         
 
 
-    def next_state(self, session, action):
+    def next_state(self, session: GameSession, action: Direction):
 
-        direction = action
-
-        new_head = Direction.add(session.snake.head(), direction)
+        new_head = Direction.add(session.snake.head(), action)
         
-        if self.is_valid_move(session, new_head): # No COLLISION BOARD BODERS and BODY
+        # VALID MOVE - No COLLISION BOARD BODERS and BODY
+        if self.is_valid_move(session, new_head): 
 
             # MOVE
-            is_apple = new_head == session.apple.cell()
+            is_apple: bool = ( new_head == session.apple.cell() )
 
             session.snake.move_to(new_head, is_apple)
             session.steps += 1
 
+            if self.is_game_win(session):
+                print("GAME_WIN")
+                return self.GAME_WIN
+            if self.is_game_over(session):
+                print("GAME_OVER")
+                return self.GAME_OVER
+
             if is_apple:
+                # eat apple
                 self.game.engine.create_apple(session)
                 session.score += 1
-            
-
-            # EAT APPLE
-            if :
-                if session.snake.len() == session.board.rows * session.board.cols:
-                    print("WIN")
-                    return 3 # game_won
-                session.snake.grow()
-                
-
-            return "game_on"
-
-        else:
-            if self.is_game_over(session.board):
-                return "game_over"
+                return self.GAME_RUN_EAT 
             else:
-                # invalid move. Retry. (for Human agent)
-                return "game_paused"
+                return self.GAME_RUN
+
+        # INVALID MOVE - Pause game, Chance to retry for Human agent
+        else:
+            # print("GAME_PAUSED")
+            return self.GAME_PAUSED
 

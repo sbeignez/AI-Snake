@@ -21,7 +21,7 @@ Nokia original game:
 
 ## Current Development
 
-Features:  
+General game features:  
 - [x] Basic POC with manual input
 - [x] Create GIU using pygame
 - [x] Refactor code using OOP
@@ -40,7 +40,7 @@ Evolution/Genetic algorithm selecting NN:
 - [-] 
 
 Supervised Learning: Deep Learning:
-- [-] Training data generation
+- [-] Generating Training data
 
 Reinforcement Learning: 1. Q-Learning
 
@@ -87,9 +87,9 @@ The board:
 
 #### 
 
-## 2.1. Pathfinding Algorithmic  
+## 2.1. Pathfinding Algorithms   
 
-### 2.1.1 Pathfinding
+### 2.1.1 Using Graph Theory
 1. Greedy
 1. Shortest path problems
     - https://en.wikipedia.org/wiki/Shortest_path_problem
@@ -99,11 +99,15 @@ The board:
 1. K-shortest paths  
     [Alternative Routing: k-Shortest Paths with Limited Overlap](https://www.informatik.hu-berlin.de/de/forschung/gebiete/wbi/research/publications/2015/sigspatial_kshortest.pdf)
 
-Source: Dijkstras Algorithm, A*
-  * [..](https://www.youtube.com/watch?v=-L-WgKMFuhE&ab_channel=SebastianLague)
-  * [..](https://www.researchgate.net/publication/237197542_Shortest_Path_Finding_Problem_in_Stochastic_Time-Dependent_Road_Networks_With_Stochastic_First-In-First-Out_Property)
-  * [..](https://neo4j.com/developer/graph-data-science/path-finding-graph-algorithms/)
+Source:  
+* [Shortest Path Problem (Wiki)](https://en.wikipedia.org/wiki/Shortest_path_problem)  
+* Dijkstras Algorithm  
+* A star  
+* [A* Pathfinding (E01: algorithm explanation)](https://www.youtube.com/watch?v=-L-WgKMFuhE&ab_channel=SebastianLague)
+* [..](https://www.researchgate.net/publication/237197542_Shortest_Path_Finding_Problem_in_Stochastic_Time-Dependent_Road_Networks_With_Stochastic_First-In-First-Out_Property)
+* [..](https://neo4j.com/developer/graph-data-science/path-finding-graph-algorithms/)
 
+  
 1. Graph
     1. Data structures for Graph-Network representations
         * Adjacent Matrix
@@ -121,6 +125,9 @@ Source: Dijkstras Algorithm, A*
         * Connectivity
         * 
 
+### 2.1.2. Using Optimization: Linear programming pathfinding
+
+* ...
 
 ## 2.2. Genetic algorithm with NN selection
 
@@ -165,26 +172,12 @@ FFNN (feed forward NN):
 * Code Bullet  
     * Video 1: [A.I. Learns to play Snake using Deep Q Learning](https://www.youtube.com/watch?v=3bhP7zulFfY&ab_channel=CodeBullet)
     * Video 2: [I Created a PERFECT SNAKE A.I.](https://www.youtube.com/watch?v=tjQIO1rqTBE)
-    * GitHub: [Code-Bullet/SnakeFusion](https://github.com/Code-Bullet/SnakeFusion) - 
+    * GitHub: [Code-Bullet/SnakeFusion](https://github.com/Code-Bullet/SnakeFusion) - Language: Processing
 * AlphaPhoenix
     * [Video](https://www.youtube.com/watch?v=TOpBcfbAgPg&ab_channel=AlphaPhoenix)
 * Jack of Some
     * Video: [Neural Network Learns to Play Snake using Deep Reinforcement Learning](https://www.youtube.com/watch?v=i0Pkgtbh1xw) - March 2020
     * GitHub: ??
->>  
-    www.wandb.com ?
-    NN Learning need learning data  
-    exploration strategy:
-    - epsilon greedy (exploration: random move / explotation: NN output)
-    64 snakes games running in parallel, 16 steps, >> train
-    RL Improvements:
-    - Advantage Actor-Critic (A2C)
-    - Proximal Policy Optimization (PPO) OpenAI
-    - Monte Carlo Tree Search
-    Use a model (model-free vs. ..)  
-    Calculate the next few frames
-
-
 * V.Gedace  
     * [Generic solution for the Snake game via Hamiltonian Cycle and additional abbreviation logic.](https://www.youtube.com/watch?v=UI_I6sJXaJw&t=45s&ab_channel=V.Gedace) - Video - Oct 2020  
     * GitHub: [Hamiltonian-Cylce-Snake](https://github.com/UweR70/Hamiltonian-Cylce-Snake) - C# - Algo / Hamiltonian-Cycle

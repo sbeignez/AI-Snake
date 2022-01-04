@@ -10,10 +10,10 @@ if __name__ == '__main__':
 
     # Parameters
     params = GameParams()
-    params.BOARD_ROWS = 3
-    params.BOARD_COLS = 3
-    params.SCALE = 50
-    params.agent = Agents.AGENT_SHORTEST_DISTANCE
+    params.BOARD_ROWS = 30
+    params.BOARD_COLS = 30
+    params.SCALE = 80
+    params.agent = Agents.AGENT_GREEDY
     params.mode = Mode.MODE_PLAY
 
     # Game run!

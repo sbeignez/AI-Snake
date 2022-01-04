@@ -1,5 +1,5 @@
 
-from snake_agent_ai import *
+from snake_agent_factory import *
 from snake_utils import *
 from collections import deque
 
@@ -9,7 +9,7 @@ class GameSession():
 
         self.game = game
 
-        self.agent = AgentAI(self, agent)
+        self.agent = AgentFactory(self, agent).get_agent()
 
         self.board = Board(x, y)
         self.snake = Snake()
@@ -21,7 +21,7 @@ class GameSession():
     def create_session(self, agent):
         self.game.engine.init_snake(self)
         self.game.engine.create_apple(self)
-        self.agent = AgentAI(self, agent)
+        self.agent = AgentFactory(self, agent).get_agent()
         # print("INIT:", self.snake, self.apple)
 
 
@@ -37,8 +37,8 @@ class Board():
 
     @cols.setter
     def cols(self, cols):
-        if cols <3 or cols >100:
-            raise ValueError("Boards' number of columns must be between 3 and 100") 
+        if cols <2 or cols >100:
+            raise ValueError("Boards' number of columns must be between 2 and 100") 
         self._cols = cols
 
     @property
@@ -47,12 +47,13 @@ class Board():
 
     @rows.setter
     def rows(self, rows):    
-        if rows <3 or rows >100:
-            raise ValueError("Boards' number of rows must be between 3 and 100")
+        if rows <2 or rows >100:
+            raise ValueError("Boards' number of rows must be between 2 and 100")
         self._rows = rows
 
+    @property
     def size(self):
-        return self._cols * self._rows
+        return self.cols * self.rows
 
 
 class Apple():
@@ -74,10 +75,15 @@ class Snake():
 
     def __init__(self, snake_body = []):
         self._body = deque(snake_body)
+        self._len = len(self.body)
 
     @property
     def body(self):
         return self._body
+
+    @property
+    def len(self):
+        return self._len
 
     def head(self):
         if not self._body:
@@ -89,17 +95,20 @@ class Snake():
             return None
         return self._body[0]
 
-    def move_to(self, cell: Cell):
+    def move_to(self, cell: Cell, is_apple: bool):
         self._body.append(cell)
-        self._body.popleft()
+        if is_apple:
+            self._len +=1
+        else:
+            self._body.popleft()
     
-    def grow(self):
+    # def grow(self):
         # snake grows 1 step after eating the apple
         # tail is duplicated
-        self._body.appendleft(self._body[0])
+        # self._body.appendleft(self._body[0])
 
-    def len(self):
-        return len(self._body)
+    # def len(self):
+    #     return len(self._body)
 
     def __str__(self):
         return f"Snake({list(self.body)})"

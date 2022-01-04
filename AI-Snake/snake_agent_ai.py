@@ -1,31 +1,33 @@
-from snake_utils import Direction
+from snake_utils import Direction, Agents
+from snake_agent_abstract import Agent
 import enum
 
-# Agents Enum
-class Agents(enum.Enum):
-    AGENT_SHORTEST_DISTANCE = "Shortest Distance"
-    AGENT_A_STAR = "A*"
+
+# class AgentAI(Agent):
+
+#     def __init__ (self, session, agent_type : Agents):
+#         self.session = session
+#         self.agent_type = agent_type
+
+#         self.paths = None
+
+#     def next_move(self):
+#         return self._get_next_move()
 
 
-class AgentAI():
+#     def _get_next_move(self):
+#         if self.agent_type == Agents.AGENT_SHORTEST_DISTANCE:
+#             return self.next_move_greedy()
+#         if self.agent_type == Agents.AGENT_A_STAR:
+#             return self.next_move_a_star()
 
-    def __init__ (self, session, agent_type : Agents):
+class AgentGreedy(Agent): 
+
+    def __init__ (self, session, agent_type):
         self.session = session
         self.agent_type = agent_type
 
-        self.paths = None
-
     def next_move(self):
-        return self._get_next_move()
-
-
-    def _get_next_move(self):
-        if self.agent_type == Agents.AGENT_SHORTEST_DISTANCE:
-            return self.next_move_SD()
-        if self.agent_type == Agents.AGENT_A_STAR:
-            return self.next_move_AS()
-            
-    def next_move_SD(self):
         head = self.session.snake.head()
         moves = []
         # DOWN
@@ -55,8 +57,13 @@ class AgentAI():
 
         return direction
 
+class AgentAStar(Agent):
 
-    def next_move_AS(self):
+    def __init__ (self, session, agent_type):
+        self.session = session
+        self.agent_type = agent_type
+
+    def next_move(self):
 
         def reconstruct_path(came_from, current):
             path = []

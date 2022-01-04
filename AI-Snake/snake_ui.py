@@ -1,12 +1,12 @@
 # from _typeshed import Self
 import pygame
 import pygame.gfxdraw
-# from snake import *
+from snake_utils import Direction
 
 class UI():
 
     # UI DEFAULTS
-    SCALE = 40
+    SCALE = 60
     WINDOW_SCORE = 300
 
     FONT_SIZE = 20
@@ -39,6 +39,11 @@ class UI():
         pygame.init()
         pygame.display.set_caption('Snake Challenge 2022')
         self.window = pygame.display.set_mode( (self.window_x_px , self.window_y_px) )
+        
+        keys = [pygame.KEYDOWN, pygame.QUIT]
+        pygame.event.set_blocked(None)
+        pygame.event.set_allowed(keys)
+        self.action_key = None
 
 
     def draw_ui(self):
@@ -123,13 +128,59 @@ class UI():
             "SCORE: " + ("        " + str(self.game.session.score))[-8:],
             "",
             "MODE: " + self.game.MODE_AUTO,
-            "AGENT" + self.game.session.agent.agent_type.value,
+            "AGENT: " + self.game.session.agent.agent_type.value,
             "PAUSED" if self.game.is_paused() else "",
             "GAME-OVER" if self.game.is_game_over() else "",
         ]
 
         for line_number, text in enumerate(texts):
             self.window.blit(font.render(text, True, self.COLOR_SCORE), (self.cols * self.SCALE + self.PADDING, self.PADDING + 25 * line_number))
+
+
+
+    def get_keyboard_events(self):
+
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    self.game.quit = True
+                if event.type == pygame.KEYDOWN:
+                    # TAB: Restart game
+                    if event.key == pygame.K_TAB:
+                        print("Restart()")
+                        self.game.restart()
+                    # SPACE: Pause game
+                    if event.key == pygame.K_SPACE:
+                        print("Rotate_pause()")
+                        self.game.rotate_pause()
+                    # DELETE: Rewind 1 step
+                    if event.key == pygame.K_DELETE:
+                        pass
+                        #rewind()
+                    # /?: INFO
+                    if event.key == pygame.K_SLASH:
+                        print(self.game.session.snake)
+                        print(self.game.session.apple)
+                        print("status", self.game.status)
+                        print("running", self.game.running)
+                    # SHIFT: Manual/Auto mode
+                    if event.key == pygame.K_LSHIFT:
+                        self.game.rotate_mode()
+
+                    # USER ACTION
+                    if self.game.MODE_AUTO == "Manual":
+                        self.action_key = None
+
+                        if event.key == pygame.K_LEFT:
+                            self.action_key = Direction.LEFT
+                        elif event.key == pygame.K_RIGHT:
+                            self.action_key = Direction.RIGHT
+                        elif event.key == pygame.K_UP:
+                            self.action_key = Direction.UP
+                        elif event.key == pygame.K_DOWN:
+                            self.action_key = Direction.DOWN
+
+                        print("INPUT KEY: ", self.action_key)
 
 
 
