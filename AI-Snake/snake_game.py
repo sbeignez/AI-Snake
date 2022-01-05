@@ -5,11 +5,13 @@ from snake_engine import *
 from snake_ui import *
 # from snake import *
 # from snake_agent_ai import AgentAI
+import timeit
 
 
 class Mode(enum.Enum):
     MODE_PLAY = "Mode: Visual sim"
     MODE_BENCHMARK = "Mode: Benchmark"
+    MODE_TRAIN = "Trainning"
 
 
 
@@ -21,7 +23,7 @@ class GameParams():
         self.BOARD_COLS = 3
         self.SCALE = 40
 
-        self.SPEED = 20
+        self.SPEED = 30
 
         self.agent = Agents.AGENT_A_STAR
         self.mode = Mode.MODE_PLAY
@@ -105,16 +107,16 @@ class Game():
 
 
     def run(self):
-        print(self.params.mode)
+        print("run:", self.params.mode)
 
         if self.params.mode == Mode.MODE_PLAY:
             self._run_play()
         elif self.params.mode == Mode.MODE_BENCHMARK:
             self._run_benchmark()
-        elif self.params.mode == Mode.TRAIN:
+        elif self.params.mode == Mode.MODE_TRAIN:
             self._run_train()
         else:
-            print("run: unvalid mode")
+            raise ValueError(f"Game.run(): Unvalid Mode '{self.params.mode}'")
 
     def _run_play(self):
 
@@ -154,7 +156,9 @@ class Game():
                     new_status = self.engine.next_state(self.session, action)
                     self.set_status(new_status)
 
-                    if self.status in [self.GAME_PAUSED, self.GAME_OVER, self.GAME_WIN]:
+                    if new_status in [self.GAME_OVER, self.GAME_WIN, self.GAME_PAUSED,]:
+                        print(self.status)
+                    if self.status in [self.GAME_PAUSED, self.GAME_OVER, self.GAME_WIN,]:
                         self.pause()
 
             # DISPLAY
@@ -169,53 +173,98 @@ class Game():
     def _run_benchmark(self):
         print("_run_benchmark")
 
-        n_epics = 100
-        epics = []
-            # snake_length
-            # steps
-            # 
+        n_epoch = 1000
+        epochs = []
+        start_time = timeit.default_timer()
 
-        for e in range(n_epics):
-            if e % 100 == 0: print(f"Epic #{e}")
-
+        for e in range(n_epoch):
+            if e % 10 == 0: print(f"Epic #{e}")
             self.session.create_session(self.params.agent)
-            self.ui.draw_ui()
+            self.ui.get_keyboard_events()
 
             while True:
                 action = self.session.agent.next_move()
                 if action == Direction.STOP:
                     break
-                status = self.engine.next_state(self.session, action)
-                self.ui.draw_ui()
+                new_status = self.engine.next_state(self.session, action)
+                self.set_status(new_status)
+                # self.ui.draw_ui()
 
-            epics.append({"length" : self.session.snake.len(), "steps" : self.session.steps})
+            epochs.append({"n" : e, "length" : self.session.snake.len, "steps" : self.session.steps})
             
+        stop_time = timeit.default_timer()
+        execution_time = round(stop_time - start_time, 3) 
+
+        
+        avg_len = sum([ e["length"] for e in epochs ]) / n_epoch
+        avg_steps = sum([ e["steps"] for e in epochs ]) / n_epoch
         print("=====================================")
         print(f"BENCHMARK: {self.session.agent.agent_type}")
-        print(f"Epics: {n_epics}")
-        print("Avg Lenght:", sum([ e["length"] for e in epics ]) / n_epics )
-        print("Avg Steps:", sum([ e["steps"] for e in epics ]) / n_epics)
+        print(f"{n_epoch} epics in {execution_time}s")
+        print(f"Avg Apples: {avg_len}")
+        print(f"Avg Steps: {avg_steps}")
+        print(f"Avg Steps/Apple: {avg_steps/avg_len}")
+
+        # for e in epochs:
+        #     print(f"{e['n']}, {e['length']}, {e['steps']}")
 
     def _run_train(self):
-        print("_run_train")
+        print("_run_train: start")
 
-        n_epics = 100
-        epics = []
-            # snake_length
-            # steps
-            # 
+        # Episode vs epoch vs batch ?
+        n_episodes = 100_000
+        win = 0
+        apples = 0
 
-        for e in range(n_epics):
-            if e % 100 == 0: print(f"Epic #{e}")
+        for e in range(n_episodes):
 
-            self.session.create_session(self.params.agent)
+            if e % 100 == 0:
+                print(f"Episode #{e}")
 
-            while True:
+            epochs = 0
+            
+            self.status = self.GAME_RUN
+
+            self.session.restart_game()
+            # print(self.session.snake, self.session.apple)
+
+            while self.status in [ self.GAME_RUN, self.GAME_RUN_EAT ]:
+
+                # 1. AGENT PLAY
+                old_state = self.session.agent.session_to_state()
+                # print("Old State:", old_state)
+
                 action = self.session.agent.next_move()
+                # print("Action:", action)
                 if action == Direction.STOP:
                     break
-                status = self.engine.next_state(self.session, action)
-                self.ui.draw_ui()
 
-            epics.append({"length" : self.session.snake.len(), "steps" : self.session.steps})
+                # 2. ENGINE PLAY
+                self.status = self.engine.next_state(self.session, action)
+                # print(self.status, self.session.snake, self.session.apple)
+
+                new_state = self.session.agent.session_to_state()
+                # print("New State:", new_state)
+
+                # 2.2 Agent update 
+                self.session.agent.update_q_value(old_state, new_state, self.status, action)
+
+                epochs += 1
+
+            if e % 1000 == 0:
+                self.ui.draw_ui()
+                # time.sleep( 1/ self.params.SPEED )
+            
+            if self.status == self.GAME_WIN:
+                win += 1
+
+            if e % 10000 == 0:
+                print(e, epochs, apples, "Win rate:", win/(e+1))
+
+        print("_run_train: end")
+
+        for key, value in self.session.agent.Qvalues.items():
+            if not value == 0 :
+                print(key, value)
+
 

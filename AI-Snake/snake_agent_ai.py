@@ -27,6 +27,8 @@ class AgentGreedy(Agent):
         self.session = session
         self.agent_type = agent_type
 
+        self.paths = None
+
     def next_move(self):
         head = self.session.snake.head()
         moves = []
@@ -62,6 +64,8 @@ class AgentAStar(Agent):
     def __init__ (self, session, agent_type):
         self.session = session
         self.agent_type = agent_type
+
+        self.paths = None
 
     def next_move(self):
 

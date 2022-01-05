@@ -9,9 +9,9 @@ class GameSession():
 
         self.game = game
 
+        self.board = Board(x, y)
         self.agent = AgentFactory(self, agent).get_agent()
 
-        self.board = Board(x, y)
         self.snake = Snake()
         self.apple = Apple()
 
@@ -22,7 +22,15 @@ class GameSession():
         self.game.engine.init_snake(self)
         self.game.engine.create_apple(self)
         self.agent = AgentFactory(self, agent).get_agent()
+        self.score = 0
+        self.steps = 0
         # print("INIT:", self.snake, self.apple)
+
+    def restart_game(self):
+        self.game.engine.init_snake(self)
+        self.game.engine.create_apple(self)
+        self.score = 0
+        self.steps = 0
 
 
 class Board():
@@ -62,8 +70,8 @@ class Apple():
         self.x = x
         self.y = y
 
-    def cell(self):
-        return (self.x, self.y)
+    def cell(self) -> Cell:
+        return Cell(self.x, self.y)
 
     def __str__(self):
         return f"Apple({self.x}, {self.y})"
@@ -82,26 +90,27 @@ class Snake():
         return self._body
 
     @property
-    def len(self):
+    def len(self) -> int:
         return self._len
 
-    def head(self):
+    def head(self) -> Cell:
         if not self._body:
             return None
         return self._body[-1]
 
-    def tail(self):
+    def tail(self) -> Cell:
         if not self._body:
             return None
         return self._body[0]
 
-    def move_to(self, cell: Cell, is_apple: bool):
+    def append_head(self, cell: Cell):
         self._body.append(cell)
-        if is_apple:
-            self._len +=1
-        else:
-            self._body.popleft()
+        self._len +=1
     
+    def pop_tail(self):
+        self._body.popleft()
+        self._len -=1
+
     # def grow(self):
         # snake grows 1 step after eating the apple
         # tail is duplicated

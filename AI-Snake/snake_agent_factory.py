@@ -1,5 +1,6 @@
 from snake_utils import *
 from snake_agent_ai import *
+from snake_agent_rl_qlearning import *
 
 class AgentFactory():
 
@@ -11,6 +12,11 @@ class AgentFactory():
     def get_agent(self):
         if self._agent_type == Agents.AGENT_GREEDY:
             return AgentGreedy(self._session, self._agent_type)
-        if self._agent_type == Agents.AGENT_A_STAR:
+        elif self._agent_type == Agents.AGENT_A_STAR:
             return AgentAStar(self._session, self._agent_type)
+        elif self._agent_type == Agents.AGENT_Q_LEARNING:
+            return AgentQLearning(self._session, self._agent_type)
+        else:
+            raise ValueError("Agents type incorrect")
+
 

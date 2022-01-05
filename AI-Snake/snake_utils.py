@@ -5,6 +5,7 @@ from collections import namedtuple
 class Agents(enum.Enum):
     AGENT_GREEDY = "Shortest Distance"
     AGENT_A_STAR = "A*"
+    AGENT_Q_LEARNING = "Q Learning"
 
 # Cell
 Cell = namedtuple('Cell', 'x, y')
@@ -17,8 +18,11 @@ class Direction(enum.Enum):
     LEFT = (-1,0)
     STOP = (0,0)
 
-    def add(block, dir):
-        return (block[0] + dir.value[0], block[1] + dir.value[1])
+    def add(block: Cell, dir):
+        if dir:
+            return (block[0] + dir.value[0], block[1] + dir.value[1])
+        else:
+            return block
 
     def dir(start, end):
         if end and start:

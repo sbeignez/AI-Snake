@@ -42,8 +42,11 @@ class GameEngine():
         # 1. Random
         # 2. Head in center, Tail upward
         """
-
-        snake_body = [ ((session.board.cols+1)//2, (session.board.rows+1)//2 + 2 - i) for i in range(3) ]
+        # 1.
+        session.snake = Snake([(random.randint(1, self.game.session.board.cols), random.randint(1, self.game.session.board.rows),)])
+        # 2.
+        n = 2
+        snake_body = [ ((session.board.cols+1)//2, (session.board.rows+1)//2 + (n-1) - i) for i in range(n) ]
         # print("Engine.init_snake()", snake_body)
         session.snake = Snake(snake_body)
 
@@ -74,31 +77,29 @@ class GameEngine():
         new_head = Direction.add(session.snake.head(), action)
         
         # VALID MOVE - No COLLISION BOARD BODERS and BODY
-        if self.is_valid_move(session, new_head): 
+        if self.is_valid_move(session, new_head):
 
-            # MOVE
-            is_apple: bool = ( new_head == session.apple.cell() )
-
-            session.snake.move_to(new_head, is_apple)
             session.steps += 1
 
+            # MOVE
+            session.snake.append_head(new_head)
+            
             if self.is_game_win(session):
-                print("GAME_WIN")
                 return self.GAME_WIN
             if self.is_game_over(session):
-                print("GAME_OVER")
                 return self.GAME_OVER
 
+            is_apple: bool = ( new_head == session.apple.cell() )
             if is_apple:
                 # eat apple
                 self.game.engine.create_apple(session)
                 session.score += 1
                 return self.GAME_RUN_EAT 
             else:
+                session.snake.pop_tail()
                 return self.GAME_RUN
 
         # INVALID MOVE - Pause game, Chance to retry for Human agent
         else:
-            # print("GAME_PAUSED")
             return self.GAME_PAUSED
 

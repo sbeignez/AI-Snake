@@ -6,6 +6,7 @@ class Agent(ABC):
 
     def __init__(self, session, agent):
         self._session = session
+        self.paths = []
 
     # @property
     # @abstractmethod

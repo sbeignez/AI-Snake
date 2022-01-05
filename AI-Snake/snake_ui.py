@@ -6,7 +6,6 @@ from snake_utils import Direction
 class UI():
 
     # UI DEFAULTS
-    SCALE = 60
     WINDOW_SCORE = 300
 
     FONT_SIZE = 20
@@ -29,9 +28,10 @@ class UI():
     def __init__(self, game):
 
         self.game = game
+
         self.rows = game.session.board.rows
         self.cols = game.session.board.cols
-        self.scale = self.SCALE
+        self.scale = game.params.SCALE
 
         self.window_x_px = self.cols * self.scale + self.WINDOW_SCORE
         self.window_y_px = self.rows * self.scale
@@ -40,9 +40,13 @@ class UI():
         pygame.display.set_caption('Snake Challenge 2022')
         self.window = pygame.display.set_mode( (self.window_x_px , self.window_y_px) )
         
+        self.erase_ui()
+        pygame.display.update()
+        
         keys = [pygame.KEYDOWN, pygame.QUIT]
         pygame.event.set_blocked(None)
         pygame.event.set_allowed(keys)
+        pygame.event.get()
         self.action_key = None
 
 
@@ -80,16 +84,17 @@ class UI():
                 self.draw_cell(c, r, color)
 
     def draw_cell(self, x, y, color):
-        pygame.draw.rect(self.window, color, pygame.Rect(x * self.SCALE, y * self.SCALE, self.SCALE, self.SCALE))
-        pygame.draw.rect(self.window, self.COLOR_CELL, pygame.Rect(x * self.SCALE, y * self.SCALE, self.SCALE, self.SCALE),1)
+        pygame.draw.rect(self.window, color, pygame.Rect(x * self.scale, y * self.scale, self.scale, self.scale))
+        pygame.draw.rect(self.window, self.COLOR_CELL, pygame.Rect(x * self.scale, y * self.scale, self.scale, self.scale),1)
 
     def draw_apple(self, apple):
         x, y = apple.x, apple.y
-        pygame.draw.circle(self.window, self.COLOR_APPLE, ((x-.5) * self.SCALE, (self.rows - y +.5) * self.SCALE), (self.SCALE * .8)/2, 0)
+        if x and y:
+            pygame.draw.circle(self.window, self.COLOR_APPLE, ((x-.5) * self.scale, (self.rows - y +.5) * self.scale), (self.scale * .8)/2, 0)
 
     def draw_pause(self):
-        rect1 = pygame.Rect(self.cols * self.SCALE / 3, self.rows * self.SCALE / 3, self.cols * self.SCALE / 9, self.rows * self.SCALE / 3)
-        rect2 = pygame.Rect(self.cols * self.SCALE * 5 / 9, self.rows * self.SCALE / 3, self.cols * self.SCALE / 9, self.rows * self.SCALE / 3)
+        rect1 = pygame.Rect(self.cols * self.scale / 3, self.rows * self.scale / 3, self.cols * self.scale / 9, self.rows * self.scale / 3)
+        rect2 = pygame.Rect(self.cols * self.scale * 5 / 9, self.rows * self.scale / 3, self.cols * self.scale / 9, self.rows * self.scale / 3)
         
         pygame.gfxdraw.box(self.window, rect1, (*self.COLOR_PAUSE, 150))
         pygame.gfxdraw.box(self.window, rect2, (*self.COLOR_PAUSE, 150))
@@ -97,7 +102,7 @@ class UI():
         pygame.draw.rect(self.window, self.COLOR_PAUSE, rect2, 1)
 
     def draw_game_over(self):
-        rect1 = pygame.Rect(self.cols * self.SCALE / 3, self.rows * self.SCALE / 3, self.cols * self.SCALE / 3, self.rows * self.SCALE / 3)
+        rect1 = pygame.Rect(self.cols * self.scale / 3, self.rows * self.scale / 3, self.cols * self.scale / 3, self.rows * self.scale / 3)
         pygame.gfxdraw.box(self.window, rect1, (*self.COLOR_PAUSE, 150))
         pygame.draw.rect(self.window, self.COLOR_PAUSE, rect1, 1)
 
@@ -106,10 +111,10 @@ class UI():
         L = len(snake.body)
         for i, s in enumerate(snake.body):
             x, y = s[0], s[1]
-            # pygame.draw.circle(window, color, ((y+.5) * SCALE, (x+.5) * SCALE ), R, 0)
-            pygame.draw.rect(self.window, self.COLOR_SNAKE if i==L-1 else self.COLOR_SNAKE_2, pygame.Rect((x-1) * self.SCALE + 1, (self.rows - y) * self.SCALE + 1, self.SCALE - 2, self.SCALE - 2), 0, border_radius= 1)
+            # pygame.draw.circle(window, color, ((y+.5) * scale, (x+.5) * scale ), R, 0)
+            pygame.draw.rect(self.window, self.COLOR_SNAKE if i==L-1 else self.COLOR_SNAKE_2, pygame.Rect((x-1) * self.scale + 1, (self.rows - y) * self.scale + 1, self.scale - 2, self.scale - 2), 0, border_radius= 1)
             if x_0 is not None:
-                pygame.draw.line(self.window, self.COLOR_SNAKE_SPINE, (((x_0-1)+.5)*self.SCALE,((self.rows-y_0)+.5)*self.SCALE), (((x-1)+.5)*self.SCALE, ((self.rows-y)+.5)*self.SCALE,), 4)
+                pygame.draw.line(self.window, self.COLOR_SNAKE_SPINE, (((x_0-1)+.5)*self.scale,((self.rows-y_0)+.5)*self.scale), (((x-1)+.5)*self.scale, ((self.rows-y)+.5)*self.scale,), 4)
             x_0, y_0 = x, y
 
     def draw_paths(self, paths):
@@ -117,7 +122,7 @@ class UI():
             for path in paths:
                 for i, move in enumerate(path):
                     x, y = move[0], move[1]
-                    pygame.draw.rect(self.window, self.COLOR_MOVE_BEST if i==0 else self.COLOR_MOVES, pygame.Rect((x-1) * self.SCALE + 1, (self.rows - y) * self.SCALE + 1, self.SCALE - 2, self.SCALE - 2), 0, border_radius= 1)
+                    pygame.draw.rect(self.window, self.COLOR_MOVE_BEST if i==0 else self.COLOR_MOVES, pygame.Rect((x-1) * self.scale + 1, (self.rows - y) * self.scale + 1, self.scale - 2, self.scale - 2), 0, border_radius= 1)
 
     def draw_score(self):
         font = pygame.font.SysFont('Courier', self.FONT_SIZE, bold=True)
@@ -134,7 +139,7 @@ class UI():
         ]
 
         for line_number, text in enumerate(texts):
-            self.window.blit(font.render(text, True, self.COLOR_SCORE), (self.cols * self.SCALE + self.PADDING, self.PADDING + 25 * line_number))
+            self.window.blit(font.render(text, True, self.COLOR_SCORE), (self.cols * self.scale + self.PADDING, self.PADDING + 25 * line_number))
 
 
 
@@ -168,7 +173,7 @@ class UI():
                         self.game.rotate_mode()
 
                     # USER ACTION
-                    if self.game.MODE_AUTO == "Manual":
+                    if self.game.MODE_AUTO == "Manual" and not self.game.is_game_over():
                         self.action_key = None
 
                         if event.key == pygame.K_LEFT:
