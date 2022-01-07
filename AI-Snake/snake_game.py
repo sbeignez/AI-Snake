@@ -8,11 +8,6 @@ from snake_ui import *
 import timeit
 
 
-class Mode(enum.Enum):
-    MODE_PLAY = "Mode: Visual sim"
-    MODE_BENCHMARK = "Mode: Benchmark"
-    MODE_TRAIN = "Trainning"
-
 
 
 class GameParams():
@@ -26,11 +21,16 @@ class GameParams():
         self.SPEED = 30
 
         self.agent = Agents.AGENT_A_STAR
-        self.mode = Mode.MODE_PLAY
+        self.mode = Game.Mode.MODE_PLAY
 
 
 
 class Game():
+
+    class Mode(enum.Enum):
+        MODE_PLAY = "Mode: Visual sim"
+        MODE_BENCHMARK = "Mode: Benchmark"
+        MODE_TRAIN = "Trainning"
 
     GAME_RUN = 0
     GAME_RUN_EAT = 1
@@ -109,11 +109,11 @@ class Game():
     def run(self):
         print("run:", self.params.mode)
 
-        if self.params.mode == Mode.MODE_PLAY:
+        if self.params.mode == Game.Mode.MODE_PLAY:
             self._run_play()
-        elif self.params.mode == Mode.MODE_BENCHMARK:
+        elif self.params.mode == Game.Mode.MODE_BENCHMARK:
             self._run_benchmark()
-        elif self.params.mode == Mode.MODE_TRAIN:
+        elif self.params.mode == Game.Mode.MODE_TRAIN:
             self._run_train()
         else:
             raise ValueError(f"Game.run(): Unvalid Mode '{self.params.mode}'")
@@ -212,7 +212,7 @@ class Game():
         print("_run_train: start")
 
         # Episode vs epoch vs batch ?
-        n_episodes = 100_000
+        n_episodes = 99999
         win = 0
         apples = 0
 
@@ -222,22 +222,24 @@ class Game():
                 print(f"Episode #{e}")
 
             epochs = 0
+            history = []
             
             self.status = self.GAME_RUN
 
             self.session.restart_game()
             # print(self.session.snake, self.session.apple)
 
-            while self.status in [ self.GAME_RUN, self.GAME_RUN_EAT ]:
+            while self.status in [ self.GAME_PAUSED, self.GAME_RUN, self.GAME_RUN_EAT ]:
 
                 # 1. AGENT PLAY
                 old_state = self.session.agent.session_to_state()
-                # print("Old State:", old_state)
+                # print("Old State:", old_state, self.session.snake, self.session.apple)
 
                 action = self.session.agent.next_move()
                 # print("Action:", action)
                 if action == Direction.STOP:
                     break
+                history.append(action)
 
                 # 2. ENGINE PLAY
                 self.status = self.engine.next_state(self.session, action)
@@ -252,6 +254,7 @@ class Game():
                 epochs += 1
 
             if e % 1000 == 0:
+                print(history, self.session.snake, self.session.apple)
                 self.ui.draw_ui()
                 # time.sleep( 1/ self.params.SPEED )
             

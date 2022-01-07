@@ -20,8 +20,8 @@ class AgentQLearning(Agent):
         GAME_RUN: -.01,
         GAME_RUN_EAT: 10,
         GAME_WIN: 100,
-        GAME_PAUSED: -10,
-        GAME_OVER: -10
+        GAME_PAUSED: -1,
+        GAME_OVER: -1,
     }
 
     def __init__ (self, session, agent_type):
@@ -31,11 +31,12 @@ class AgentQLearning(Agent):
 
         
         
-        self.learning_rate = 0.5 # alpha
+        self.learning_rate = 0.8 # alpha
         self.discount_factor = 0.8 # gamma
-        self.epsilon = 0.2 # epsilon greedy?
+        self.epsilon = 0.5 # epsilon greedy?
 
         self.ACTIONS = Direction.all_dirs() # N S E W 
+        # print("Action:",self.ACTIONS)
 
         self.STATES = [
             ( xh, yh, xt, yt, xa, ya )
@@ -67,11 +68,12 @@ class AgentQLearning(Agent):
     def update_q_value(self, old_state, new_state, status, action):
 
         reward = self.reward[status]
-        # print(reward)
+        # print(old_state, action, ">", new_state, reward, self.Qvalues[(old_state, action)])
+
         
         self.Qvalues[(old_state, action)] = (
                 (1 - self.learning_rate) * self.Qvalues[(old_state, action)] 
-                + self.learning_rate * ( reward + self.discount_factor * np.max(self.Qvalues[(new_state,action)]) )
+                + self.learning_rate * ( reward + self.discount_factor * max([ self.Qvalues[(new_state,action)] for action in self.ACTIONS]) )
             )
 
     def session_to_state(self):

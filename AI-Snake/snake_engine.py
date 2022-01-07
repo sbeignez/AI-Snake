@@ -2,6 +2,7 @@ import random
 from snake_utils import *
 from snake_game_session import Snake, Apple, GameSession
 
+
 class GameEngine():
 
     GAME_RUN = 0
@@ -101,5 +102,7 @@ class GameEngine():
 
         # INVALID MOVE - Pause game, Chance to retry for Human agent
         else:
-            return self.GAME_PAUSED
+            #if self.game.mode == Game.Mode.MODE_PLAY:
+            #     return self.GAME_PAUSED
+            return self.GAME_OVER
 

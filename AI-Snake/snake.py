@@ -15,16 +15,16 @@ if __name__ == '__main__':
     params.SCALE = 40
     params.SPEED = 40
     params.agent = Agents.AGENT_Q_LEARNING
-    params.mode = Mode.MODE_TRAIN
+    params.mode = Game.Mode.MODE_TRAIN
 
     # Parameters Q Learning
     params = GameParams()
     params.BOARD_ROWS = 3
-    params.BOARD_COLS = 3
+    params.BOARD_COLS = 2
     params.SCALE = 40
     params.SPEED = 8
     params.agent = Agents.AGENT_Q_LEARNING
-    params.mode = Mode.MODE_TRAIN
+    params.mode = Game.Mode.MODE_TRAIN
 
     # Game run!
     Game(params).run()

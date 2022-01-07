@@ -33,6 +33,9 @@ class Direction(enum.Enum):
     def all_dirs():
         return [Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT]
 
+    def __str__(self):
+        return self.name
+    __repr__ = __str__
 
 
 
