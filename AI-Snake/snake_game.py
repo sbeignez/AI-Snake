@@ -23,6 +23,8 @@ class GameParams():
         self.agent = Agents.AGENT_A_STAR
         self.mode = Game.Mode.MODE_PLAY
 
+        self.log = False
+
 
 
 class Game():
@@ -153,7 +155,7 @@ class Game():
 
                     # 2. ENGINE turn: Update Model
                     # if action != Direction.STOP:
-                    new_status = self.engine.next_state(self.session, action)
+                    new_status, _, _, _ = self.engine.step(self.session, action)
                     self.set_status(new_status)
 
                     if new_status in [self.GAME_OVER, self.GAME_WIN, self.GAME_PAUSED,]:
@@ -170,104 +172,144 @@ class Game():
         self.end()
 
 
-    def _run_benchmark(self):
+    def _run_benchmark(self, n_episodes = 100):
+        print("="*40)
         print("_run_benchmark")
 
-        n_epoch = 1000
-        epochs = []
+        history = []
+        n_episodes_split = n_episodes // 10
+
+        self.session.create_session(self.params.agent)
+        self.ui.get_keyboard_events()
+
         start_time = timeit.default_timer()
 
-        for e in range(n_epoch):
-            if e % 10 == 0: print(f"Epic #{e}")
-            self.session.create_session(self.params.agent)
-            self.ui.get_keyboard_events()
+        for i_episode in range(n_episodes):
+            if i_episode % n_episodes_split == 0:
+                print(f"Episode #{i_episode}")
+                self.ui.draw_ui()
+
+            self.engine.reset()
 
             while True:
                 action = self.session.agent.next_move()
-                if action == Direction.STOP:
-                    break
-                new_status = self.engine.next_state(self.session, action)
+                new_status, reward, done, info = self.engine.step(self.session, action)
                 self.set_status(new_status)
-                # self.ui.draw_ui()
+                if done:
+                    break
+            
 
-            epochs.append({"n" : e, "length" : self.session.snake.len, "steps" : self.session.steps})
+            history.append({"n" : i_episode, "length" : self.session.snake.len, "steps" : self.session.steps})
             
         stop_time = timeit.default_timer()
         execution_time = round(stop_time - start_time, 3) 
 
         
-        avg_len = sum([ e["length"] for e in epochs ]) / n_epoch
-        avg_steps = sum([ e["steps"] for e in epochs ]) / n_epoch
-        print("=====================================")
+        avg_len = sum([ e["length"] for e in history ]) / n_episodes
+        avg_steps = sum([ e["steps"] for e in history ]) / n_episodes
+        print("="*40)
         print(f"BENCHMARK: {self.session.agent.agent_type}")
-        print(f"{n_epoch} epics in {execution_time}s")
+        print(f"{n_episodes} episodes in {execution_time}s")
         print(f"Avg Apples: {avg_len}")
         print(f"Avg Steps: {avg_steps}")
         print(f"Avg Steps/Apple: {avg_steps/avg_len}")
 
-        # for e in epochs:
+        # for e in history:
         #     print(f"{e['n']}, {e['length']}, {e['steps']}")
 
     def _run_train(self):
         print("_run_train: start")
 
         # Episode vs epoch vs batch ?
-        n_episodes = 99999
+        n_episodes = 3_000
+        n_episodes_split = n_episodes // 10 + 1
         win = 0
         apples = 0
 
         for e in range(n_episodes):
 
-            if e % 100 == 0:
+            if self.params.log: print("="*40)
+
+            if e % n_episodes_split == 0:
                 print(f"Episode #{e}")
 
-            epochs = 0
+            timesteps = 0
             history = []
             
             self.status = self.GAME_RUN
-
             self.session.restart_game()
-            # print(self.session.snake, self.session.apple)
+            
 
             while self.status in [ self.GAME_PAUSED, self.GAME_RUN, self.GAME_RUN_EAT ]:
+
+                # print(self.session.snake, self.session.apple)
+                if self.params.log: print(self.session.agent.render_text())
 
                 # 1. AGENT PLAY
                 old_state = self.session.agent.session_to_state()
                 # print("Old State:", old_state, self.session.snake, self.session.apple)
 
                 action = self.session.agent.next_move()
-                # print("Action:", action)
-                if action == Direction.STOP:
-                    break
+                # if self.log: print("Action:", action)
+                # if action == Direction.STOP:
+                #     break
                 history.append(action)
 
                 # 2. ENGINE PLAY
-                self.status = self.engine.next_state(self.session, action)
-                # print(self.status, self.session.snake, self.session.apple)
+                self.status, _, done, _ = self.engine.step(self.session, action)
+                if self.params.log: print("STATUS", self.status, self.session.snake, self.session.apple)
 
                 new_state = self.session.agent.session_to_state()
                 # print("New State:", new_state)
 
                 # 2.2 Agent update 
                 self.session.agent.update_q_value(old_state, new_state, self.status, action)
+                
+                if self.params.log: self.session.agent.print_Q(state = old_state)
 
-                epochs += 1
+                timesteps += 1
 
-            if e % 1000 == 0:
-                print(history, self.session.snake, self.session.apple)
-                self.ui.draw_ui()
+                if self.params.log: print("-"*40)
+
+            if e % n_episodes_split == 0:
+                print(history)
+                # print(self.session.agent.render_text())
+                # self.ui.draw_ui()
                 # time.sleep( 1/ self.params.SPEED )
             
             if self.status == self.GAME_WIN:
                 win += 1
 
-            if e % 10000 == 0:
-                print(e, epochs, apples, "Win rate:", win/(e+1))
+            if e % n_episodes_split == 0:
+                print("#:", e, timesteps, "Apples:", apples, "Win rate:", win/(e+1))
 
         print("_run_train: end")
+        self.session.agent.print_Q()
 
-        for key, value in self.session.agent.Qvalues.items():
-            if not value == 0 :
-                print(key, value)
+        self._run_train_play()
+
+
+    def _run_train_play(self):
+
+        self.session.agent.epsilon = 0
+
+        n_episodes = 4
+        n_episodes_split = n_episodes // 10
+
+        self.ui.get_keyboard_events()
+
+        for i_episode in range(n_episodes):
+
+            self.engine.reset()
+
+            while True:
+                self.ui.draw_ui()
+                self.clock.tick(self.params.SPEED)
+
+                action = self.session.agent.next_move()
+                new_status, reward, done, info = self.engine.step(self.session, action)
+                self.set_status(new_status)
+                if done:
+                    break        
 
 

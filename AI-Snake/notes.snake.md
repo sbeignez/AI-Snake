@@ -164,7 +164,9 @@ FFNN (feed forward NN):
 - output layer size = Actions dim (3)
 
 
-
+Tools:
+* [Keras RL](https://keras.io/examples/rl/)
+* [OpenAI GYM]()
 
 
 # References: Open Projects
@@ -200,6 +202,10 @@ FFNN (feed forward NN):
 * To watch:
     * Square Robot [Square Robot](https://www.youtube.com/watch?v=8cdUree20j4&ab_channel=SquareRobots)
     * Ludius0 [..](https://www.youtube.com/watch?v=7Vh77YytDgg&ab_channel=ludius0)
+
+
+2. RL
+    * https://www.youtube.com/watch?v=bD6V3rcr_54&list=LL&t=1333s
 
 
 * https://www.researchgate.net/publication/254184076_Neural_Networks_for_Real-time_Pathfinding_in_Computer_Games

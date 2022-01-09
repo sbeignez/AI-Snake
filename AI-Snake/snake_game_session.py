@@ -32,6 +32,11 @@ class GameSession():
         self.score = 0
         self.steps = 0
 
+    def reset(self):
+        self.score = 0
+        self.steps = 0
+
+
 
 class Board():
 
