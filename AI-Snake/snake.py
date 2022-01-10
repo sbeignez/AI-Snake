@@ -40,7 +40,7 @@ if __name__ == '__main__':
     p03.BOARD_ROWS = 4
     p03.BOARD_COLS = 2
     p03.SCALE = 40
-    p03.SPEED = 5
+    p03.SPEED = 4
     p03.agent = Agents.AGENT_Q_LEARNING
     p03.mode = Game.Mode.MODE_TRAIN
     p03.log = False

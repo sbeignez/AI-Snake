@@ -38,6 +38,8 @@ class AgentQLearning(Agent):
         self.ACTIONS = Direction.all_dirs() # N S E W 
         # print("Action:",self.ACTIONS)
 
+        self.NUM_ACTION = len(self.ACTIONS)
+
         self.STATES = [
             ( xh, yh, xt, yt, xa, ya )
             for xh in range(1, self.session.board.cols+1)
@@ -47,25 +49,36 @@ class AgentQLearning(Agent):
             for xa in range(1, self.session.board.cols+1)
             for ya in range(1, self.session.board.rows+1)            
             ]
-        # print("States:",self.STATES[0:3])
+
+        self.NUM_STATES= len(self.STATES)
+
         
         self.Qvalues = { (state, action) : 0 for state in self.STATES for action in self.ACTIONS } # np.zeros([len(self.STATES), len(self.ACTIONS)])
         print("QValues", self.print_Q())
 
 
     def next_move(self) -> Direction:
-        if random.uniform(0, 1) < self.epsilon:
+        """ Return action
+        Exploration policy: Epsilon-Greedy 
+        """
+        
+        coin = np.random.random_sample()
+        # epsilon_t = self.epsilon ** steps
+
+        if coin < self.epsilon:
             # Explore action space
             action = self.sample_actions() 
-            # if self.session.game.params.log: print("Explore", action)
+            infos = {"Policy action": "Explore"}
         else:
             # Exploit learned values
             # action = np.argmax(self.Qvalues[self.session_to_state()]
-            Qstate = { key : value for key, value in self.Qvalues.items() if key[0] == self.session_to_state()}
+            q_values = { key : value for key, value in self.Qvalues.items() if key[0] == self.session_to_state()}
+
+            state, action = max(q_values, key = q_values.get)
+            infos = {"Policy action": "Exploit"}
+
             # print("Q state", Qstate)
-            state, action = max(Qstate, key = Qstate.get)
-            # if self.session.game.params.log: print("Exploit", action)
-        return action
+        return action, infos
 
     def update_q_value(self, old_state, new_state, status, action):
 
@@ -87,6 +100,7 @@ class AgentQLearning(Agent):
             )
 
     def session_to_state(self):
+        # observation
         return (
             self.session.snake.head()[0], self.session.snake.head()[1],
             self.session.snake.tail()[0], self.session.snake.tail()[1],

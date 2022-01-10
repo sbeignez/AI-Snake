@@ -6,6 +6,8 @@ from snake_ui import *
 # from snake import *
 # from snake_agent_ai import AgentAI
 import timeit
+import tqdm
+import matplotlib.pyplot as plt
 
 
 
@@ -18,7 +20,7 @@ class GameParams():
         self.BOARD_COLS = 3
         self.SCALE = 40
 
-        self.SPEED = 30
+        self.SPEED = 30 # frames per second
 
         self.agent = Agents.AGENT_A_STAR
         self.mode = Game.Mode.MODE_PLAY
@@ -219,14 +221,33 @@ class Game():
 
     def _run_train(self):
         print("_run_train: start")
+        history = self.run_epoch()
+        self.plot_history(self, history)
+
+    def run_epoch(self, NUM_EPIS_TRAIN=25, NUM_EPIS_TEST = 50):
+        """Runs one epoch and returns reward averaged over test episodes"""
+        rewards = []
+
+        for _ in range(NUM_EPIS_TRAIN):
+            self.run_episode(for_training=True)
+
+        for _ in range(NUM_EPIS_TEST):
+            reward_episode = self.run_episode(for_training=False)
+            rewards.append(reward_episode)
+
+        return np.mean(np.array(rewards))
+
+    def run_episode(self, for_training):
 
         # Episode vs epoch vs batch ?
-        n_episodes = 3_000
+        n_episodes = 100
         n_episodes_split = n_episodes // 10 + 1
         win = 0
         apples = 0
 
-        for e in range(n_episodes):
+        pbar = tqdm.tqdm(range(n_episodes), ncols=80)
+
+        for e in pbar:
 
             if self.params.log: print("="*40)
 
@@ -249,10 +270,8 @@ class Game():
                 old_state = self.session.agent.session_to_state()
                 # print("Old State:", old_state, self.session.snake, self.session.apple)
 
-                action = self.session.agent.next_move()
-                # if self.log: print("Action:", action)
-                # if action == Direction.STOP:
-                #     break
+                action, info = self.session.agent.next_move()
+                if self.params.log: print("Action:", info)
                 history.append(action)
 
                 # 2. ENGINE PLAY
@@ -262,10 +281,17 @@ class Game():
                 new_state = self.session.agent.session_to_state()
                 # print("New State:", new_state)
 
-                # 2.2 Agent update 
-                self.session.agent.update_q_value(old_state, new_state, self.status, action)
+                # 2.2 Agent update
+                if for_training:
+                    self.session.agent.update_q_value(old_state, new_state, self.status, action)
                 
-                if self.params.log: self.session.agent.print_Q(state = old_state)
+                if not for_training:
+                    pass
+                    # epi_reward = epi_reward + gamma_step * reward
+                    # gamma_step = gamma_step * GAMMA
+                    # return epi_reward                  
+                
+                # if self.params.log: self.session.agent.print_Q(state = old_state)
 
                 timesteps += 1
 
@@ -301,15 +327,31 @@ class Game():
         for i_episode in range(n_episodes):
 
             self.engine.reset()
+            self.ui.draw_ui()
 
             while True:
-                self.ui.draw_ui()
-                self.clock.tick(self.params.SPEED)
 
-                action = self.session.agent.next_move()
+
+                action, info = self.session.agent.next_move()
                 new_status, reward, done, info = self.engine.step(self.session, action)
                 self.set_status(new_status)
+
+                self.clock.tick(self.params.SPEED)
+                self.ui.draw_ui()
+
                 if done:
-                    break        
+                    self.clock.tick(self.params.SPEED)
+                    break
+
+    
 
 
+    
+    def plot_history(self, history):
+        x = np.arange(len(history))
+        fig, axis = plt.subplots()
+        axis.plot(x, np.mean(history, axis=0))  # plot reward per epoch averaged per run
+        axis.set_xlabel('Epochs')
+        axis.set_ylabel('reward')
+        axis.set_title("TITLE")
+        plt.show()
