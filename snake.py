@@ -19,8 +19,8 @@ if __name__ == '__main__':
 
     # 1. Parameters for 
     p01 = GameParams()
-    p01.BOARD_ROWS = 6
-    p01.BOARD_COLS = 6
+    p01.BOARD_ROWS = 3
+    p01.BOARD_COLS = 2
     p01.SCALE = 40
     p01.SPEED = 40
     p01.agent = Agents.AGENT_A_STAR
@@ -37,13 +37,13 @@ if __name__ == '__main__':
 
     # 3. Parameters Q Learning
     p03 = GameParams()
-    p03.BOARD_ROWS = 4
-    p03.BOARD_COLS = 2
-    p03.SCALE = 40
-    p03.SPEED = 4
+    p03.BOARD_ROWS = 3
+    p03.BOARD_COLS = 3
+    p03.SCALE = 80
+    p03.SPEED = 6
     p03.agent = Agents.AGENT_Q_LEARNING
     p03.mode = Game.Mode.MODE_TRAIN
     p03.log = False
 
     # Game run!
-    Game(p03).run()
+    Game(p01).run()

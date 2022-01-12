@@ -17,6 +17,7 @@ class GameSession():
 
         self.score = 0
         self.steps = 0
+        self.steps_since_last = 0
 
     def create_session(self, agent):
         self.game.engine.init_snake(self)
@@ -24,6 +25,7 @@ class GameSession():
         self.agent = AgentFactory(self, agent).get_agent()
         self.score = 0
         self.steps = 0
+        self.steps_since_last = 0
         # print("INIT:", self.snake, self.apple)
 
     def restart_game(self):
@@ -31,10 +33,12 @@ class GameSession():
         self.game.engine.create_apple(self)
         self.score = 0
         self.steps = 0
+        self.steps_since_last = 0
 
     def reset(self):
         self.score = 0
         self.steps = 0
+        self.steps_since_last = 0
 
 
 
@@ -43,6 +47,8 @@ class Board():
     def __init__(self, cols, rows) -> None:
         self.cols = cols
         self.rows = rows
+        if (self.size) % 2 == 1:
+            raise ValueError("Boards' size must be even") 
 
     @property
     def cols(self):

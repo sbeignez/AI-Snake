@@ -129,9 +129,8 @@ class UI():
 
         texts = [
             "SNAKE CHALLENGE",
-            "MOVES: " + ("        " + str(self.game.session.steps))[-8:],
+            "MOVES: " + ("(" + str(self.game.session.steps_since_last) + ") "+ str(self.game.session.steps)).rjust(8),
             "SCORE: " + ("        " + str(self.game.session.score))[-8:],
-            "",
             "MODE: " + self.game.MODE_AUTO,
             "AGENT: " + self.game.session.agent.agent_type.value,
             "PAUSED" if self.game.is_paused() else "",

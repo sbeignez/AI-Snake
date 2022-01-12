@@ -74,10 +74,12 @@ class GameEngine(Env):
         # VALID MOVE - No COLLISION BOARD BODERS and BODY
         if self.is_valid_move(session, new_head):
 
-            session.steps += 1
+            
 
             # MOVE
             session.snake.append_head(new_head)
+            session.steps += 1
+            session.steps_since_last += 1
             
             if self.is_game_win(session):
                 obs = self.GAME_WIN
@@ -92,6 +94,7 @@ class GameEngine(Env):
                     # eat apple
                     self.game.engine.create_apple(session)
                     session.score += 1
+                    session.steps_since_last = 0
                     obs = self.GAME_RUN_EAT
                     reward = 1
                 else:
@@ -110,6 +113,8 @@ class GameEngine(Env):
     def is_game_over(self, session):
         if self.is_game_win(session):
             return False
+        if self.game.session.steps_since_last > 2 * self.game.session.board.size:
+            return True
         moves_possible = [ Direction.add(session.snake.head(), d) for d in Direction.all_dirs()]
         game_over = not any([ self.is_valid_move(session, move) for move in moves_possible])
         return game_over

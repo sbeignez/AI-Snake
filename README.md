@@ -1,6 +1,7 @@
 # AI-Snake Competition
 ![](https://img.shields.io/badge/Status-In--Progress-orange)
 
+---
 ## 1. Presentation
 
 ### 1.1. Problem definition
@@ -45,15 +46,14 @@ The game can be modified for the competition:
 Parameters | Nokia | Snake Competition
 ---| ----- | ---
 Board size | _ rows x 15 cols | 30 rows x 30 cols
-Starting snake length | 3 body parts | 1 body part
-Starting position | Top Center | Random 
-Starting direction | Top-Down | n/a
-Game over rate | | < 0.1%
+Snake Starting length | 3 body parts | 1 body part
+Snake Starting position | Top Center | Random 
+Snake Starting direction | Top-Down | n/a
 
 #### 1.2.3. Performance indicators
 
-1) The Game Completion rate (GCR)
-    - Avg. score over maximum score, with Score = number of Apples eaten 
+1) The Game Completion Score (GCS)
+    - Avg. score over the maximum score (Score = number of Apples eaten)
     - Obj: Maximise (up to 100%)  
 2) The Game Over rate (GOR)
     - Number of game_over / total_games played  
@@ -61,39 +61,49 @@ Game over rate | | < 0.1%
 3) The Performance rate (PR)
     - Avg. ( number of Steps / score )  
     - Obj: Minimise 
-    - Max: n^2  
-3.2) The Complete Performance Rate (CPR)
-    - The Pathfinding Performance rate with 0% Game-over rate
- 
+    - Max: n^2    
+4) The Performance Rate at 0% and at 1% (PR0 and PR1)
+    - The Performance rate with 0% Game-over rate (all win)
+    - The Performance rate with a Game-over rate < 1%
 
+---
 ## 2. Possible appoaches
 
 * A. Operational Research 
     * A1. **Graph theory**   
-        Pathfinding algorithms  
-        Dijkstra, A*..   
-        Further: Pathfinding in time-dependent graphs
+        Pathfinding algorithms, such as: Dijkstra, A*..   
+        To research: Pathfinding in time-dependent graphs
     * A2. **Optimization**  
         Method: Linear Programming
     * A3. **Genetic algorithm**   
         NEAT algo with NN
 * B. AI Machine Learning
     * B1. **Supervised Learning** Deep Learning  
-        Methods: Neural Network  
-        Main: CNN
+        Methods: Neural Network, Deep (DNN), Convo (CNN)
     * B2. **Reinforcement Learning (RL)**  
         Q-value iteration    
-        Deep Q learning    
+        Deep Q-Netwrok (DQN)  
         Further: Advantage Actor-Critic (A2C), Proximal Policy Optimization (PPO), Monte Carlo Tree Search
 
-
+---
 ## 3. Current Development
 
-General game features:  
-- [x] Basic POC with manual input
-- [x] Create GIU using pygame
-- [x] Refactor code using OOP
-- [x] Separate Engine and Agent logic
+Game features:
+- General
+    - [x] Basic game logic
+    - [x] Human agent (Keyboard)
+    - [x] Create GIU using pygame
+    - [x] Refactor code using OOP
+    - [x] Separate Engine and Agent logic
+    - [-] Refactor Session/Engine class for OpenAI Gym interface Env()
+    - [-] Refactor Agent
+- History
+    - [-] Record Episodes
+- Replay and Tests
+    - [-] Save env states and solutions
+    - [-]   
+- Benchmarking
+    - [-]
 
 A1. Pathfinding Algorithms:
 - [x] Add Greedy algo / agent

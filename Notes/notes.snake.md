@@ -1,12 +1,6 @@
 # AI Snake 
 
-
-
-
-
-# 2. References
-
-## 2.0 Problem definition
+## Problem definition
 
 Graph:
 - Pathfinding problem
@@ -36,34 +30,16 @@ The board:
 * y: rows From 1, Axe: vertical, from bottom to top
 
 
-#### Design patterns
+Python Libraries for viz:
+* [v] Pygame
+* Pyglet
 
-#### 
 
 
-#### 
+# A1. Graph Theory and Pathfinding
 
-## 2.1. Pathfinding Algorithms   
+## 2.1. Notes about Graph Theory
 
-### 2.1.1 Using Graph Theory
-1. Greedy
-1. Shortest path problems
-    - https://en.wikipedia.org/wiki/Shortest_path_problem
-1. A* Pathfinding Algorithm
-    - http://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html
-1. Hamiltonian loop/cycle
-1. K-shortest paths  
-    [Alternative Routing: k-Shortest Paths with Limited Overlap](https://www.informatik.hu-berlin.de/de/forschung/gebiete/wbi/research/publications/2015/sigspatial_kshortest.pdf)
-
-Source:  
-* [Shortest Path Problem (Wiki)](https://en.wikipedia.org/wiki/Shortest_path_problem)  
-* Dijkstras Algorithm  
-* A star  
-* [A* Pathfinding (E01: algorithm explanation)](https://www.youtube.com/watch?v=-L-WgKMFuhE&ab_channel=SebastianLague)
-* [..](https://www.researchgate.net/publication/237197542_Shortest_Path_Finding_Problem_in_Stochastic_Time-Dependent_Road_Networks_With_Stochastic_First-In-First-Out_Property)
-* [..](https://neo4j.com/developer/graph-data-science/path-finding-graph-algorithms/)
-
-  
 1. Graph
     1. Data structures for Graph-Network representations
         * Adjacent Matrix
@@ -77,17 +53,87 @@ Source:
     1. Graph concepts
         * Hamiltonian (hamiltonicity)
         * vs. Eulerian
-        * path and cycles/ loop
+        * path and cycles/ loop. Hamiltonian loop/cycle
         * Connectivity
         * 
 
-### 2.1.2. Using Optimization: Linear programming pathfinding
+## 2.2. Pathfinding Algorithms   
+
+* Shortest path problems
+    - https://en.wikipedia.org/wiki/Shortest_path_problem
+* The Greedy algo
+* The Dijkstras Algorithm 
+* The A* Pathfinding Algorithm
+    - http://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html
+* Finding the K-shortest paths  
+    [Alternative Routing: k-Shortest Paths with Limited Overlap](https://www.informatik.hu-berlin.de/de/forschung/gebiete/wbi/research/publications/2015/sigspatial_kshortest.pdf)
+
+Source:  
+* [Shortest Path Problem (Wiki)](https://en.wikipedia.org/wiki/Shortest_path_problem)  
+ 
+* A star  
+* [A* Pathfinding (E01: algorithm explanation)](https://www.youtube.com/watch?v=-L-WgKMFuhE&ab_channel=SebastianLague)
+* [..](https://www.researchgate.net/publication/237197542_Shortest_Path_Finding_Problem_in_Stochastic_Time-Dependent_Road_Networks_With_Stochastic_First-In-First-Out_Property)
+* [..](https://neo4j.com/developer/graph-data-science/path-finding-graph-algorithms/)
+
+Pathfinding in a grid:
+* https://harablog.wordpress.com/2011/08/26/fast-pathfinding-via-symmetry-breaking/amp/
+
+## 2.3
+
+Tools, Libraries  
+
+## 2.4 Notes and Ideas
+
+Problem definition:
+* Graph with special properties: a GRID
+    * Maximun number of vertices = 4
+    * All distances = 1
+* Time-dependant
+    * Snake body desactivate nodes temporalily
+* Objective
+    * Next apple position is random
+
+Strategy:
+* Min ( path lenght to objective + avg. shortest path to all next possible objectives )
+
+Functions to dev:
+* is_valid_path()
+* is_reachable( $f state_{board,snake} (objective) \to Bool $ )
+
+Idea: the optimal paths don't need to respect cycle hamiltonicity, if {...}
+
+### Create a library of Test cases for algorithm
+
+* generation
+    * By hand
+    * By brute force
+    * While learning / Record when failing
+
+* archiving
+    * what to store
+        * initial state: board, snake body with sequence, apple
+        * best solution(s) to reach apple
+    * which representation, data structure?
+
+* running tests
+    * loading test(s) from archive
+    * invoke agent
+    * compare results
+    * return Pass/Fail or a mark
+
+
+
+
+
+
+# A2. Optimization & Linear programming 
 
 * ...
 
-## 2.2. Genetic algorithm with NN selection
+# A3. Genetic algorithm with NN selection
 
-## 2.3. Supervised Learning
+# B1. Supervised Learning
 Neural Network, trained by Gradient Descent  
 NN type: deep FFNN, 
 
@@ -99,25 +145,49 @@ Point of view | "Bird view" | "Snake vision"
 Actions | The 4 directions (N,S,E,W) | 3 actions (turn right, turn left, go straight) relative to snake body
 .. | .. | - Distance head to Danger (R,L,S)<br> - Direction (NSEW)<br>  - Food (NSEW)
 
-## 2.4. Re-inforcement Learning
+# B2. Re-inforcement Learning
+
+Technics:
 - Q Learning
 - Deep Q Learning
+- Advantage Actor-Critic (A2C)
+- Proximal Policy Optimization (PPO)
+- Monte Carlo Tree Search
+* Policy Gradient Theorem
+    * https://www.youtube.com/watch?v=cQfOQcpYRzE&ab_channel=ElliotWaite
 
----
-Q-Learning:
+## Q-Learning
+
+Problem definition for Q-Learning
+
 * States S
 * Actions A
 * Transition proba T(s, a, s')
 * Rewards R(s, a, s')
 
-Reward: Keep in the range [-1;+1]
+Design issues:
+* Model design: How to represent the States and Actions
+* Reward design
+
+Terminal:
+* Game-over: hit tail or wall
+* Loop: over (x) moves since last apple
+
+Reward design:  
+* Keep in the range [-1;+1]
+* Reward when eating apple
+* Parse reward issue
+    * reward for getting closer to apple
+    * Eval function
 
 
-MODEL
-
+NN design
 FFNN (feed forward NN): 
 - input layer size = State dim (one hot)
 - output layer size = Actions dim (3)
+
+
+
 
 
 Tools:
@@ -125,7 +195,9 @@ Tools:
 * [OpenAI GYM]()
 
 
-# References: Open Projects
+# R. References
+
+## R1. Open Projects - Solving Snake
 
 * Code Bullet  
     * Video 1: [A.I. Learns to play Snake using Deep Q Learning](https://www.youtube.com/watch?v=3bhP7zulFfY&ab_channel=CodeBullet)
@@ -150,32 +222,35 @@ Tools:
     * Blog: [Training an AI bot to play Snake](https://www.codeer.dev/blog/2020/05/03/ai-snake.html)
     * Video: [AI learns to play Snake - Deep Q Learning - Neural Network](https://www.youtube.com/watch?v=ozFDavKIvpk&ab_channel=Pawe%C5%82Kami%C5%84ski)
     * GitHub: [AI-Snake](https://github.com/pawelkami/AI-Snake) - Python - Deep Reinforcement Learning algorithm, Deep Q Neural Network
+* Square Robot
+    * Video: [AI learns to play SNAKE using Reinforcement Learning](https://www.youtube.com/watch?v=8cdUree20j4&ab_channel=SquareRobots) - Q-Learning
+    * Video: [AI learns to play SNAKE using Reinforcement Learning Part 2](https://www.youtube.com/watch?v=WjuLQVg04JY)
 
+To watch:  
 
-* Others:
+* Crispresso
+    * Video: [AI Learns to play Snake!](https://www.youtube.com/watch?v=vhiO4WsHA6c&t=99s)
+    * GitHub: [SnakeAI](https://github.com/Chrispresso/SnakeAI) - Python - RL
+* XX
     * GreerViau [GreerViau](https://www.youtube.com/watch?v=zIkBYwdkuTk&ab_channel=GreerViau)
-
-* To watch:
-    * Square Robot [Square Robot](https://www.youtube.com/watch?v=8cdUree20j4&ab_channel=SquareRobots)
     * Ludius0 [..](https://www.youtube.com/watch?v=7Vh77YytDgg&ab_channel=ludius0)
-    * https://www.davidsilver.uk/teaching/
-    * 
 
 
-2. RL
-    * https://www.youtube.com/watch?v=bD6V3rcr_54&list=LL&t=1333s
+## R2. Domain (References)
 
-
+Graph / Pathfinding
 * https://www.researchgate.net/publication/254184076_Neural_Networks_for_Real-time_Pathfinding_in_Computer_Games
 
+AI
+* https://www.davidsilver.uk/teaching/
+
+RL
+* https://www.youtube.com/watch?v=bD6V3rcr_54&list=LL&t=1333s
+* Video: [Policy Gradient Theorem Explained - Reinforcement Learning](https://www.youtube.com/watch?v=cQfOQcpYRzE&ab_channel=ElliotWaite)
 
 
-## 2. link
-
-[Link to reference](#2-link)
 
 
----
  
 
 

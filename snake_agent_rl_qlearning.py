@@ -21,7 +21,7 @@ class AgentQLearning(Agent):
         GAME_RUN_EAT: 10,
         GAME_WIN: 100,
         GAME_PAUSED: -10,
-        GAME_OVER: -10,
+        GAME_OVER: - np.inf,
     }
 
     def __init__ (self, session, agent_type):
@@ -57,7 +57,7 @@ class AgentQLearning(Agent):
         print("QValues", self.print_Q())
 
 
-    def next_move(self) -> Direction:
+    def next_move(self, training=True) -> Direction:
         """ Return action
         Exploration policy: Epsilon-Greedy 
         """
@@ -65,7 +65,9 @@ class AgentQLearning(Agent):
         coin = np.random.random_sample()
         # epsilon_t = self.epsilon ** steps
 
-        if coin < self.epsilon:
+        # print(coin, self.epsilon, coin < self.epsilon, training, )
+
+        if coin < self.epsilon and training:
             # Explore action space
             action = self.sample_actions() 
             infos = {"Policy action": "Explore"}
@@ -77,7 +79,6 @@ class AgentQLearning(Agent):
             state, action = max(q_values, key = q_values.get)
             infos = {"Policy action": "Exploit"}
 
-            # print("Q state", Qstate)
         return action, infos
 
     def update_q_value(self, old_state, new_state, status, action):
@@ -111,7 +112,11 @@ class AgentQLearning(Agent):
         return random.choice(self.STATES)
 
     def sample_actions(self):
-        return random.choice(self.ACTIONS)
+        actions = [ action for (state, action), value in self.Qvalues.items() if state == self.session_to_state() and not value == -np.inf]
+        # print("Possible actions", len(actions), actions)
+        action = random.choice(actions) if actions else random.choice(self.ACTIONS)
+        # random.choice(self.ACTIONS)
+        return action
 
 
     def render_text(self):

@@ -222,9 +222,10 @@ class Game():
     def _run_train(self):
         print("_run_train: start")
         history = self.run_epoch()
-        self.plot_history(self, history)
+        print(history)
+        # self.plot_history(history)
 
-    def run_epoch(self, NUM_EPIS_TRAIN=25, NUM_EPIS_TEST = 50):
+    def run_epoch(self, NUM_EPIS_TRAIN=8, NUM_EPIS_TEST = 0):
         """Runs one epoch and returns reward averaged over test episodes"""
         rewards = []
 
@@ -235,12 +236,12 @@ class Game():
             reward_episode = self.run_episode(for_training=False)
             rewards.append(reward_episode)
 
-        return np.mean(np.array(rewards))
+        return [1,2,3] # np.mean(np.array(rewards))
 
     def run_episode(self, for_training):
 
         # Episode vs epoch vs batch ?
-        n_episodes = 100
+        n_episodes = 200
         n_episodes_split = n_episodes // 10 + 1
         win = 0
         apples = 0
@@ -252,7 +253,8 @@ class Game():
             if self.params.log: print("="*40)
 
             if e % n_episodes_split == 0:
-                print(f"Episode #{e}")
+                pass
+                # print(f"Episode #{e}")
 
             timesteps = 0
             history = []
@@ -270,7 +272,7 @@ class Game():
                 old_state = self.session.agent.session_to_state()
                 # print("Old State:", old_state, self.session.snake, self.session.apple)
 
-                action, info = self.session.agent.next_move()
+                action, info = self.session.agent.next_move(training=True)
                 if self.params.log: print("Action:", info)
                 history.append(action)
 
@@ -296,30 +298,28 @@ class Game():
                 timesteps += 1
 
                 if self.params.log: print("-"*40)
-
-            if e % n_episodes_split == 0:
-                print(history)
-                # print(self.session.agent.render_text())
-                # self.ui.draw_ui()
-                # time.sleep( 1/ self.params.SPEED )
             
             if self.status == self.GAME_WIN:
+                print("WIN")
                 win += 1
 
             if e % n_episodes_split == 0:
-                print("#:", e, timesteps, "Apples:", apples, "Win rate:", win/(e+1))
+                pass
+                # print(history)
+                # print(self.session.agent.render_text())
+                # self.ui.draw_ui()
+                # time.sleep( 1/ self.params.SPEED )
+                # print("#:", e, timesteps, "Apples:", apples, "Win rate:", win/(e+1))
 
         print("_run_train: end")
-        self.session.agent.print_Q()
+        # self.session.agent.print_Q()
 
         self._run_train_play()
 
 
     def _run_train_play(self):
 
-        self.session.agent.epsilon = 0
-
-        n_episodes = 4
+        n_episodes = 5
         n_episodes_split = n_episodes // 10
 
         self.ui.get_keyboard_events()
@@ -327,12 +327,13 @@ class Game():
         for i_episode in range(n_episodes):
 
             self.engine.reset()
+            self.session.reset()
             self.ui.draw_ui()
 
             while True:
 
 
-                action, info = self.session.agent.next_move()
+                action, info = self.session.agent.next_move(training=False)
                 new_status, reward, done, info = self.engine.step(self.session, action)
                 self.set_status(new_status)
 
