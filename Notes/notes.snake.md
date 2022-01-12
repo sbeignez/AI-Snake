@@ -1,50 +1,6 @@
-# AI Snake challenge 
+# AI Snake 
 
-## 1. Rules of the competition
 
-* Board size: 30x30 / 10x10 / nxn 
-* Starting snake length: 3 / 1 
-* Starting position: center / random
-* Starting direction: random
-* Game over rate < 0.01% / ..%
-
-Nokia original game:
-* https://playsnake.org
-* Board size: ?? W x 15H
-* Starting snake length: 3 
-* Starting position: center: Top Center 
-* Starting direction: Down
-
-  
-
-# AI Snake Project
-
-## Current Development
-
-General game features:  
-- [x] Basic POC with manual input
-- [x] Create GIU using pygame
-- [x] Refactor code using OOP
-- [x] Separate Engine and Agent logic
-
-Pathfinding Algorithms:
-- [x] Add Greedy algo / agent
-- [x] Add A* algo / agent
-- [x] Add Modes: Play and Benchmark
-- [-] Logging history
-- [-] Create snapshot of game configuration/situation/..
-- [-] Replay of snapshots
-- [-] Rewind steps (manual)
-
-Evolution/Genetic algorithm selecting NN:
-- [-] 
-
-Supervised Learning: Deep Learning:
-- [-] Generating Training data
-
-Reinforcement Learning: 1. Q-Learning
-
-Reinforcement Learning: 2. Deep Q-Learning
 
 
 
@@ -56,7 +12,7 @@ Graph:
 - Pathfinding problem
 - Shortest path (over all iterations)
 - Deterministic Time-dependant graph (the snake tail changes graph)
-- Stochastic next objective (Next apple location is random) 
+- 
 - ..
 
 ### 2.0.2 Objects  definition
@@ -202,6 +158,8 @@ Tools:
 * To watch:
     * Square Robot [Square Robot](https://www.youtube.com/watch?v=8cdUree20j4&ab_channel=SquareRobots)
     * Ludius0 [..](https://www.youtube.com/watch?v=7Vh77YytDgg&ab_channel=ludius0)
+    * https://www.davidsilver.uk/teaching/
+    * 
 
 
 2. RL
