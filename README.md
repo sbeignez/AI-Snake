@@ -89,43 +89,44 @@ Snake Starting direction | Top-Down | n/a
 ## 3. Current Development
 
 Game features:
+
 - General
     - [x] Basic game logic
     - [x] Human agent (Keyboard)
     - [x] Create GIU using pygame
     - [x] Refactor code using OOP
     - [x] Separate Engine and Agent logic
-    - [-] Refactor Session/Engine class for OpenAI Gym interface Env()
-    - [-] Refactor Agent
+    - [ ] Refactor Session/Engine class for OpenAI Gym interface Env()
+    - [ ] Refactor Agent
 - History
-    - [-] Record Episodes
+    - [ ] Record Episodes
 - Replay and Tests
-    - [-] Save env states and solutions
-    - [-]   
+    - [ ] Save env states and solutions
+    - [ ]   
 - Benchmarking
-    - [-]
+    - [ ]
 
 A1. Pathfinding Algorithms:
 - [x] Add Greedy algo / agent
 - [x] Add A* algo / agent
 - [x] Add Modes: Play and Benchmark
-- [-] Logging history
-- [-] Create snapshot of game configuration/situation/..
-- [-] Replay of snapshots
-- [-] Rewind steps (manual)
+- [ ] Logging history
+- [ ] Create snapshot of game configuration/situation/..
+- [ ] Replay of snapshots
+- [ ] Rewind steps (manual)
 
 A3. Evolution/Genetic algorithm selecting NN:
-- [-] 
+- [ ] 
 
 B1. Supervised Learning: Deep Learning:
-- [-] Generating Training data
+- [ ] Generating Training data
 
 B2. Reinforcement Learning:
 1. Q-Learning
-- [-] 
+- [ ] 
 
 2. Deep Q-Learning
-- [-] 
+- [ ] 
 
 ---
 
