@@ -10,11 +10,11 @@ if __name__ == '__main__':
     
     # 1. Parameters for MANUAL
     p00 = GameParams()
-    p00.BOARD_ROWS = 2
-    p00.BOARD_COLS = 2
+    p00.BOARD_ROWS = 8
+    p00.BOARD_COLS = 8
     p00.SCALE = 80
     p00.SPEED = 20
-    p00.agent = Agents.AGENT_GREEDY
+    p00.agent = Agents.AGENT_A_STAR
     p00.mode = Game.Mode.MODE_PLAY
 
     # 1. Parameters for 
@@ -46,4 +46,4 @@ if __name__ == '__main__':
     p03.log = False
 
     # Game run!
-    Game(p01).run()
+    Game(p00).run()

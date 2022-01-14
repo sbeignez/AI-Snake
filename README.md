@@ -1,6 +1,8 @@
 # AI-Snake Competition
 ![](https://img.shields.io/badge/Status-In--Progress-orange)
 
+![snake](docs/img/AI-Snake.Screen.256.png)
+
 ---
 ## 1. Presentation
 
