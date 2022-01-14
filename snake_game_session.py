@@ -2,6 +2,7 @@
 from snake_agent_factory import *
 from snake_utils import *
 from collections import deque
+import json
 
 class GameSession():
 
@@ -40,6 +41,8 @@ class GameSession():
         self.steps = 0
         self.steps_since_last = 0
 
+    def toJSON(self):
+        return json.dumps([vars(self.board), vars(self.apple)])
 
 
 class Board():

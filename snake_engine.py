@@ -49,7 +49,7 @@ class GameEngine(Env):
     GAME_WIN = 3
     GAME_OVER = 4
 
-    def __init__(self, game):
+    def __init__(self, game, snake_len = 1):
         self.game = game
 
         self.action_space = spaces.Discrete(5)
@@ -144,10 +144,10 @@ class GameEngine(Env):
         # 1.
         session.snake = Snake([(random.randint(1, self.game.session.board.cols), random.randint(1, self.game.session.board.rows),)])
         # 2.
-        n = 2
-        snake_body = [ ((session.board.cols+1)//2, (session.board.rows+1)//2 + (n-1) - i) for i in range(n) ]
+        # n = 2
+        # snake_body = [ ((session.board.cols+1)//2, (session.board.rows+1)//2 + (n-1) - i) for i in range(n) ]
         # print("Engine.init_snake()", snake_body)
-        session.snake = Snake(snake_body)
+        # session.snake = Snake(snake_body)
 
 
 

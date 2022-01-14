@@ -3,8 +3,7 @@ import pygame
 from snake_game_session import *
 from snake_engine import *
 from snake_ui import *
-# from snake import *
-# from snake_agent_ai import AgentAI
+from utils.snake_save import *
 import timeit
 import tqdm
 import matplotlib.pyplot as plt
@@ -162,6 +161,8 @@ class Game():
 
                     if new_status in [self.GAME_OVER, self.GAME_WIN, self.GAME_PAUSED,]:
                         print(self.status)
+                    if self.status in [self.GAME_OVER, self.GAME_WIN,]:
+                        save(self.session.toJSON(), file_name="xxx.json")
                     if self.status in [self.GAME_PAUSED, self.GAME_OVER, self.GAME_WIN,]:
                         self.pause()
 

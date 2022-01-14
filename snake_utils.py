@@ -39,5 +39,5 @@ class Direction(enum.Enum):
 
 
 
-# import matplotlib.pyplot as plt
-# plt.
+if __name__ == '__main__':
+    pass
