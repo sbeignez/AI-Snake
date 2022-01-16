@@ -5,6 +5,7 @@ from collections import namedtuple
 class Agents(enum.Enum):
     AGENT_GREEDY = "Shortest Distance"
     AGENT_A_STAR = "A*"
+    AGENT_SUPER_STAR = "Super Star"
     AGENT_Q_LEARNING = "Q Learning"
 
 # Cell

@@ -14,6 +14,8 @@ class AgentFactory():
             return AgentGreedy(self._session, self._agent_type)
         elif self._agent_type == Agents.AGENT_A_STAR:
             return AgentAStar(self._session, self._agent_type)
+        elif self._agent_type == Agents.AGENT_SUPER_STAR:
+            return AgentSuperStar(self._session, self._agent_type)
         elif self._agent_type == Agents.AGENT_Q_LEARNING:
             return AgentQLearning(self._session, self._agent_type)
         else:

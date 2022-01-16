@@ -26,6 +26,15 @@ if __name__ == '__main__':
     p01.agent = Agents.AGENT_A_STAR
     p01.mode = Game.Mode.MODE_PLAY
 
+    # 1. Parameters for MANUAL
+    p011 = GameParams()
+    p011.BOARD_ROWS = 6
+    p011.BOARD_COLS = 6
+    p011.SCALE = 100
+    p011.SPEED = 20
+    p011.agent = Agents.AGENT_SUPER_STAR
+    p011.mode = Game.Mode.MODE_PLAY
+
     # 2. Parameters Becnhmark
     p02 = GameParams()
     p02.BOARD_ROWS = 10
@@ -45,5 +54,8 @@ if __name__ == '__main__':
     p03.mode = Game.Mode.MODE_TRAIN
     p03.log = False
 
+
+
+
     # Game run!
-    Game(p00).run()
+    Game(p011).run()

@@ -86,6 +86,9 @@ class Apple():
 
     def cell(self) -> Cell:
         return Cell(self.x, self.y)
+    
+    def node(self) -> Cell:
+        return (self.x, self.y)
 
     def __str__(self):
         return f"Apple({self.x}, {self.y})"
