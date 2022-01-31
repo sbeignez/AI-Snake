@@ -199,6 +199,8 @@ Tools:
 
 ## R1. Open Projects - Solving Snake
 
+Videos:
+
 * Code Bullet  
     * Video 1: [A.I. Learns to play Snake using Deep Q Learning](https://www.youtube.com/watch?v=3bhP7zulFfY&ab_channel=CodeBullet)
     * Video 2: [I Created a PERFECT SNAKE A.I.](https://www.youtube.com/watch?v=tjQIO1rqTBE)
@@ -234,6 +236,11 @@ To watch:
 * XX
     * GreerViau [GreerViau](https://www.youtube.com/watch?v=zIkBYwdkuTk&ab_channel=GreerViau)
     * Ludius0 [..](https://www.youtube.com/watch?v=7Vh77YytDgg&ab_channel=ludius0)
+
+Articles:
+
+* Derk Rembold, university of Albstadt-Sigmaringen
+    * [Deep Reinforcement Learning with the Snake Game](https://www3.hs-albsig.de/wordpress/point2pointmotion/2020/10/09/deep-reinforcement-learning-with-the-snake-game/)
 
 
 ## R2. Domain (References)
