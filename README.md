@@ -69,17 +69,17 @@ Snake Starting direction | Top-Down | n/a
     - The Performance rate with a Game-over rate < 1%
 
 ---
-## 2. Possible appoaches
+## 2. Possible AI appoaches
 
 * A. Operational Research 
-    * A1. **Graph theory**   
+    * A1. **Search**   
         Pathfinding algorithms, such as: Dijkstra, A*..   
         To research: Pathfinding in time-dependent graphs
     * A2. **Optimization**  
         Method: Linear Programming
     * A3. **Genetic algorithm**   
         NEAT algo with NN
-* B. AI Machine Learning
+* B. Machine Learning
     * B1. **Supervised Learning** Deep Learning  
         Methods: Neural Network, Deep (DNN), Convo (CNN)
     * B2. **Reinforcement Learning (RL)**  
