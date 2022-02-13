@@ -9,7 +9,7 @@ from collections import deque
 
 class Node():
     def __init__(self, state, parent = None, action = None, path_cost = 1):
-        self.state = state #snake: list of possition
+        self.state = state #snake: list of positions, without apple position
         self.parent = parent
         self.action = action
         self.path_cost = path_cost
